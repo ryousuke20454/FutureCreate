@@ -29,20 +29,24 @@ public class StaminaUse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 左スティックの入力値を取得
-        Vector2 stickInput = gamepad.leftStick.ReadValue();
-
-        //PS5の×ボタンを押してるときに
-        if (gamepad.buttonSouth.IsPressed())
+        if (gamepad != null)
         {
-            //左のレバーが少しでも倒されているとき
-            if (stickInput.x > stickPower || stickInput.x < -stickPower &&
-                stickInput.y > stickPower || stickInput.y < -stickPower)
+
+            // 左スティックの入力値を取得
+            Vector2 stickInput = gamepad.leftStick.ReadValue();
+
+            //PS5の×ボタンを押してるときに
+            if (gamepad.buttonSouth.IsPressed())
             {
-                //スタミナがあれば
-                if (slider.value > 0.0f)
+                //左のレバーが少しでも倒されているとき
+                if (stickInput.x > stickPower || stickInput.x < -stickPower &&
+                    stickInput.y > stickPower || stickInput.y < -stickPower)
                 {
-                    slider.value -= speed;
+                    //スタミナがあれば
+                    if (slider.value > 0.0f)
+                    {
+                        slider.value -= speed;
+                    }
                 }
             }
         }

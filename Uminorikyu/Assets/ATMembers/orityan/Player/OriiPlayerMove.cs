@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.DualShock;
 
-public class PlayerMove : MonoBehaviour
+public class OriiPlayerMove : MonoBehaviour
 {
     Gamepad gamepad;
     [SerializeField] float speed;
@@ -24,11 +24,14 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // 左スティックの入力値を取得
-        Vector2 stickInput = gamepad.leftStick.ReadValue();
-        //移動
-        gameObject.transform.position = 
-            new Vector2(gameObject.transform.position .x + stickInput.x * speed,
-            gameObject.transform.position.y + stickInput.y * speed);
+        if (gamepad != null)
+        {
+            // 左スティックの入力値を取得
+            Vector2 stickInput = gamepad.leftStick.ReadValue();
+            //移動
+            gameObject.transform.position =
+                new Vector2(gameObject.transform.position.x + stickInput.x * speed,
+                gameObject.transform.position.y + stickInput.y * speed);
+        }
     }
 }

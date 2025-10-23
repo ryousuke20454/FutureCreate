@@ -1,19 +1,25 @@
-using UnityEngine;
+ï»¿using UnityEngine;
+using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
-    [Header("ƒvƒŒƒCƒ„[İ’è")]
+    [Header("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¨­å®š")]
     public Transform player1;
     public Transform player2;
 
-    [Header("ƒJƒƒ‰‹““®")]
-    public float smoothSpeed = 5f;       // ˆÚ“®‚ÌƒXƒ€[ƒY‚³i‘å‚«‚¢‚Ù‚Ç‘¬‚¢j
-    public float minZoom = 5f;           // ‹ß‹——£‚ÌƒY[ƒ€
-    public float maxZoom = 15f;          // ‰“‹——£‚ÌƒY[ƒ€
-    public float zoomLimiter = 10f;      // ƒY[ƒ€‚Ì”½‰“x
+    [Header("ã‚«ãƒ¡ãƒ©æŒ™å‹•")]
+    public float smoothSpeed = 5f;
+    public float minZoom = 5f;
+    public float maxZoom = 15f;
+    public float zoomLimiter = 10f;
+
+    [Header("ã‚«ãƒ¡ãƒ©ã‚·ã‚§ã‚¤ã‚¯è¨­å®š")]
+    public float shakeDuration = 0.2f;   // æŒ¯å‹•ã™ã‚‹æ™‚é–“
+    public float shakeMagnitude = 0.3f;  // æŒ¯å‹•ã®å¼·ã•
 
     private Camera cam;
     private Vector3 targetPosition;
+    private bool isShaking = false;
 
     void Start()
     {
@@ -22,7 +28,7 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (player1 == null || player2 == null) return;
+        if (player1 == null || player2 == null || isShaking) return;
 
         MoveCamera();
         ZoomCamera();
@@ -30,25 +36,43 @@ public class CameraController : MonoBehaviour
 
     void MoveCamera()
     {
-        // 2l‚Ì’†ŠÔ“_‚ğŒvZ
         Vector3 centerPoint = (player1.position + player2.position) / 2f;
-
-        // ZÀ•W‚ÍŒÅ’è
         targetPosition = new Vector3(centerPoint.x, centerPoint.y, transform.position.z);
-
-        // ƒXƒ€[ƒY‚É’Ç]iLerp‚Å•âŠÔj
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * smoothSpeed);
     }
 
     void ZoomCamera()
     {
-        // ƒvƒŒƒCƒ„[ŠÔ‚Ì‹——£
         float distance = Vector2.Distance(player1.position, player2.position);
-
-        // ‹——£‚É‰‚¶‚ÄƒY[ƒ€‚ğ•âŠÔ
         float targetZoom = Mathf.Lerp(minZoom, maxZoom, distance / zoomLimiter);
-
-        // ƒXƒ€[ƒY‚ÈƒY[ƒ€
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, Time.deltaTime * smoothSpeed);
+    }
+
+    // ğŸ”¥ å¤–éƒ¨ï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãªã©ï¼‰ã‹ã‚‰å‘¼ã¶ç”¨
+    public void ShakeCamera()
+    {
+        if (!isShaking)
+            StartCoroutine(Shake());
+    }
+
+    private IEnumerator Shake()
+    {
+        isShaking = true;
+        Vector3 originalPos = transform.position;
+
+        float elapsed = 0f;
+        while (elapsed < shakeDuration)
+        {
+            float offsetX = Random.Range(-1f, 1f) * shakeMagnitude;
+            float offsetY = Random.Range(-1f, 1f) * shakeMagnitude;
+
+            transform.position = new Vector3(originalPos.x + offsetX, originalPos.y + offsetY, originalPos.z);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = originalPos;
+        isShaking = false;
     }
 }

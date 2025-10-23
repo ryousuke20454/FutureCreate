@@ -1,3 +1,4 @@
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class HomingPlayer : MonoBehaviour
@@ -13,11 +14,14 @@ public class HomingPlayer : MonoBehaviour
     private void Start()
     {
         playerTr = GameObject.FindGameObjectWithTag("Player").transform;
+        
+
 
         // インスペクターで設定した初期スケールを保存
         baseScale = transform.localScale;
     }
 
+    //プレイヤー追従
     private void Update()
     {
         if (Vector2.Distance(transform.position, playerTr.position) < 0.1f)
@@ -29,16 +33,36 @@ public class HomingPlayer : MonoBehaviour
             speed * Time.deltaTime);
     }
 
+    //ゴミとの当たり判定、サイズ変更
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Trash"))
         {
-            Destroy(collision.gameObject);
+            Debug.Log("Trash detected!");
 
-            // 現在スケールを基準に拡大（初期値からの相対拡大）
-            float newScale = transform.localScale.x + growAmount;
-            newScale = Mathf.Min(newScale, maxScale); // 最大値制限
-            transform.localScale = new Vector3(newScale, newScale, 1f);
+            // 渦のスケール(自分のスケール)
+            float vortexScale = transform.localScale.x;
+
+            // ゴミのスケール
+            float trashScale = collision.transform.localScale.x;
+
+            Debug.Log($"渦スケール: {vortexScale}, ゴミスケール: {trashScale}");
+
+            // 渦の方が大きい場合のみゴミを消す
+            if (vortexScale >= trashScale)
+            {
+                Debug.Log("ゴミを吸い込みました！");
+                Destroy(collision.gameObject);
+
+                // 現在スケールを基準に拡大
+                float newScale = transform.localScale.x + growAmount;
+                newScale = Mathf.Min(newScale, maxScale); // 最大値制限
+                transform.localScale = new Vector3(newScale, newScale, 1f);
+            }
+            else
+            {
+                Debug.Log("ゴミが大きすぎて吸い込めません！");
+            }
         }
     }
 }

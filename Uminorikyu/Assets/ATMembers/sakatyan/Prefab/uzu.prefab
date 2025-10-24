@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8508654870526743864}
   - component: {fileID: 1386481201917626207}
   - component: {fileID: 4969470566661734857}
+  - component: {fileID: 1971962273695524225}
   m_Layer: 0
   m_Name: uzu
   m_TagString: Untagged
@@ -165,7 +166,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f00f2793ce291c4cb5574dfc7e68278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTr: {fileID: 0}
   speed: 3
   growAmount: 0.05
   maxScale: 1
-  stopDistance: 0.1
+  rotationSpeed: 180
+--- !u!114 &1971962273695524225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5651931276048717882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eacdbf9e2919ff40862fa0f10f70393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bouncePower: 2

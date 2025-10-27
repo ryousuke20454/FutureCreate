@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class StaminaUse : MonoBehaviour
 {
-    Gamepad gamepad;
     Slider slider;
-    GameObject player;
-    XInputController controller;
+    [SerializeField] GameObject player;
+    Gamepad gamepad;
+    Gamepad controller;
 
     [SerializeField] float stickPower;
     [SerializeField] float speed;
@@ -18,8 +18,15 @@ public class StaminaUse : MonoBehaviour
     void Start()
     {
         //ゲームパッドの取得
-        gamepad = Gamepad.current;
-        controller = Gamepad.current as XInputController;
+        if(player.GetComponent<OriiPlayerMove>().gamepad.name == "DualSenseGamepadHID")
+        {
+            gamepad = player.GetComponent<OriiPlayerMove>().gamepad;
+        }
+        else
+        {
+            controller = player.GetComponent<OriiPlayerMove>().gamepad;
+        }
+
 
         if (controller != null)
         {
@@ -33,8 +40,6 @@ public class StaminaUse : MonoBehaviour
 
         //スタミナについてるスライダーコンポーネントの取得
         slider = GetComponent<Slider>();
-        //プレイヤーの取得
-        player = GameObject.FindWithTag("Player");
     }
 
     // Update is called once per frame
@@ -57,17 +62,17 @@ public class StaminaUse : MonoBehaviour
                     if (slider.value > 0.0f)
                     {
                         slider.value -= 0.1f;
-                        player.GetComponent<OriiPlayerMove>().speed = speed;
+                        player.GetComponent<OriiPlayerMove>().moveSpeed = speed;
                     }
                     else
                     {
-                        player.GetComponent<OriiPlayerMove>().speed = 0.2f;
+                        player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
                     }
                 }
             }
             else
             {
-                player.GetComponent<OriiPlayerMove>().speed = 0.2f;
+                player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
             }
         }
 
@@ -87,17 +92,17 @@ public class StaminaUse : MonoBehaviour
                     if (slider.value > 0.0f)
                     {
                         slider.value -= 0.1f;
-                        player.GetComponent<OriiPlayerMove>().speed = speed;
+                        player.GetComponent<OriiPlayerMove>().moveSpeed = speed;
                     }
                     else
                     {
-                        player.GetComponent<OriiPlayerMove>().speed = 0.2f;
+                        player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
                     }
                 }
             }
             else
             {
-                player.GetComponent<OriiPlayerMove>().speed = 0.2f;
+                player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
             }
         }
     }

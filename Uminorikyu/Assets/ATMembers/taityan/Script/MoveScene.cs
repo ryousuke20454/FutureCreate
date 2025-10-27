@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement; // ñYÇÍÇ»Ç¢ÅIÅI
 public class SceneLoader : MonoBehaviour
 {
-    public void LoadScene(string SampleGameScene)
+    public void LoadScene(string GameSceneName)
     {
-        SceneManager.LoadScene(SampleGameScene);
+        SceneManager.LoadScene(GameSceneName);
     }
 }

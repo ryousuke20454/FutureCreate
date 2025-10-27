@@ -6,14 +6,23 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleTitleScene.unity
+    path: Assets/ATMembers/taityan/SampleTitleScene.unity
     guid: d30dcdc524e061a4ea8ddce451363e45
   - enabled: 1
-    path: Assets/Scenes/SampleGameScene.unity
+    path: Assets/ATMembers/taityan/SampleGameScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
-    path: Assets/Scenes/SampleClearScene.unity
+    path: Assets/ATMembers/taityan/SampleClearScene.unity
     guid: e02f7daac81a7fa459221ceb782dc189
+  - enabled: 1
+    path: Assets/Products/ProductTitle.unity
+    guid: a0118d4dec48077429b02a8ef565f141
+  - enabled: 1
+    path: Assets/Products/ProductGame.unity
+    guid: 755b5dc29413d2d418f11ff58db6ceda
+  - enabled: 1
+    path: Assets/Products/ProductResult.unity
+    guid: a4d0cb84b1e1ba14092fce77d425be3b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

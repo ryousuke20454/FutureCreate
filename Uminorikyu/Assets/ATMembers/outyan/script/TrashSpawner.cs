@@ -38,9 +38,9 @@ public class TrashSpawner : MonoBehaviour
 
     [Header("短形スポーン設定")]
     [Tooltip("矩形の幅（X方向, world units）")]
-    [SerializeField] private float spawnAreaWidth = 22f;
+    [SerializeField] private float spawnAreaWidth = 17f;
     [Tooltip("矩形の高さ（Y方向, world units）")]
-    [SerializeField] private float spawnAreaHeight = 8f;
+    [SerializeField] private float spawnAreaHeight = 9.5f;
 
     [Header("スポーン位置設定")]
     [SerializeField] private int maxSpawnAttempts = 100; // スポーン位置探索の最大試行回数
@@ -98,7 +98,7 @@ public class TrashSpawner : MonoBehaviour
         SpawnEnemies();
     }
 
-    private void Update()
+    void  FixedUpdate()
     {
         if (!canSpawn)
         {

@@ -2,57 +2,74 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+public struct PlayerInfo
+{
+    public Gamepad gamepad;
+    public int score;
+}
+
+public struct RoundInfo
+{
+    public int weatherNum;
+    public int roundNum;
+}
+
 public class PlayerControllerManager : MonoBehaviour
 {
+    //シングルトン用の変数
     public static PlayerControllerManager controllerManager { get; private set; }
-
-    public Gamepad player1Controller;
-    public Gamepad player2Controller;
-
+    //プレイヤー二人分のの情報格納用
+    public PlayerInfo[] player = new PlayerInfo[2];
+    public RoundInfo round;
 
     void Start()
     {
+        //このスクリプトのシングルトン化及びスタティック化
         if (controllerManager == null)
         {
             controllerManager = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("通ってるぜ");
         }
         else
         {
             Destroy(gameObject);
         }
+
+        player[0].score = 100;
+        player[1].score = 0;
+        round.roundNum = 1;
     }
 
     void Update() 
     {
         //プレイヤー１がゲームパッドを接続していなかったら
-        if (player1Controller == null)
+        if (player[0].gamepad == null)
         {
             var gamepads = Gamepad.all;
 
             for (int i = 0; i < gamepads.Count; i++)
             {
-                if (player2Controller != gamepads[i])
+                if (player[1].gamepad != gamepads[i])
                 {
-                    player1Controller = gamepads[i];
-                    Debug.Log($"プレイヤー１の{player1Controller.name}が接続されました");
+                    player[0].gamepad = gamepads[i];
+                    Debug.Log($"プレイヤー１の{player[0].gamepad.name}が接続されました");
                     break;
                 }
             }
         }
 
         //プレイヤー１がゲームパッドを接続していなかったら
-        if (player2Controller == null)
+        if (player[1].gamepad == null)
         {
             var gamepads = Gamepad.all;
 
             for (int i = 0; i < gamepads.Count; i++)
             {
-                if (player1Controller != gamepads[i])
+                if (player[0].gamepad != gamepads[i])
                 {
-                    player2Controller = gamepads[i];
-                    Debug.Log($"プレイヤー２の{player2Controller.name}が接続されました");
+                    player[1].gamepad = gamepads[i];
+                    Debug.Log($"プレイヤー２の{player[1].gamepad.name}が接続されました");
                     break;
                 }
             }

@@ -6,80 +6,105 @@ using UnityEngine.InputSystem.XInput;
 
 public class OriiPlayerMove : MonoBehaviour
 {
-    public Gamepad gamepad;
-    GameObject player;
-    XInputController controller;
     [SerializeField] public float moveSpeed;
+    public bool dash;
+    PlayerInputScript input;
+    Gamepad gamepad;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Awake()
+    void Start()
     {
-        //別のプレイヤーを検索
-        player = GameObject.FindWithTag("Player");
-
-        //別のプレイヤーとコントローラーが被らないようにする
-        if (player.GetComponent<OriiPlayerMove>().gamepad !=
-            PlayerControllerManager.controllerManager.player1Controller)
-        {
-            gamepad = PlayerControllerManager.controllerManager.player1Controller;
-        }
-        else
-        {
-            gamepad = PlayerControllerManager.controllerManager.player2Controller;
-        }
-
-        //デバッグ
-        if (gamepad == null)
-        {
-            Debug.Log("コントローラーが接続されていません");
-        }
+        input = GetComponent<PlayerInputScript>();
+        gamepad = input.controller;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (gamepad != null)
+        if(input.controller != null)
         {
-            Vector2 stickInput;
+            Vector2 stickInput = input.GetStickValue(gamepad);
 
-            if (gamepad.name == "DualSenseGamepadHID")
+            if (input.GetSquareButton(gamepad))
             {
-                // 左スティックの入力値を取得
-                stickInput = gamepad.leftStick.ReadValue();
+                Debug.Log("□が押されました");
+            }
+            if (input.GetTriangleButton(gamepad))
+            {
+                Debug.Log("△が押されました");
+            }
+            if (input.GetCircleButton(gamepad))
+            {
+                Debug.Log("○が押されました");
+            }
+            if (input.GetCrossButton(gamepad))
+            {
+                Debug.Log("×が押されました");
+                if (stickInput.x != 0.0f && stickInput.y != 0.0f)
+                {
+                    dash = true;
+                }
             }
             else
-            //if (gamepad.name == "XInputControllerWindows")
             {
-                // 左スティックの入力値を取得
-                stickInput = gamepad.dpad.ReadValue();
-
-                /*
-                 * 入力習得一覧
-                if (controller.aButton.isPressed)
-                {
-                    Debug.Log("A Button Pressed");
-                }
-                if (controller.bButton.isPressed)
-                {
-                    Debug.Log("B Button Pressed");
-                }
-                if (controller.xButton.isPressed)
-                {
-                    Debug.Log("X Button Pressed");
-                }
-                if (controller.yButton.isPressed)
-                {
-                    Debug.Log("Y Button Pressed");
-                }
-
-                controller.dpad.ReadValue()
-
-                */
+                dash = false;
             }
+
             //移動
-            gameObject.transform.position =
-                new Vector2(gameObject.transform.position.x + stickInput.x * moveSpeed,
-                gameObject.transform.position.y + stickInput.y * moveSpeed);
+            transform.position =
+                new Vector3(
+                    transform.position.x + stickInput.x * moveSpeed,
+                    transform.position.y + stickInput.y * moveSpeed,
+                    0.0f);
+        }
+        else
+        {
+            if (input.PlayerNum == 0)
+            {
+                if (Input.GetKey(KeyCode.W))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x, transform.position.y + moveSpeed, 0.0f);
+                }
+                if (Input.GetKey(KeyCode.A))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x - moveSpeed, transform.position.y, 0.0f);
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x, transform.position.y - moveSpeed, 0.0f);
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x + moveSpeed, transform.position.y, 0.0f);
+                }
+            }
+            else
+            {
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x, transform.position.y + moveSpeed, 0.0f);
+                }
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x - moveSpeed, transform.position.y, 0.0f);
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x, transform.position.y - moveSpeed, 0.0f);
+                }
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    transform.position = new Vector3(
+                        transform.position.x + moveSpeed, transform.position.y, 0.0f);
+                }
+            }
         }
     }
 }

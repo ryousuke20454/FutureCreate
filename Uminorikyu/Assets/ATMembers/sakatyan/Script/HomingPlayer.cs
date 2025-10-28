@@ -47,23 +47,16 @@ public class Vortex : MonoBehaviour
     private bool isKnockback = false;   // 吹き飛び中か？
     private Vector3 knockbackStartPos;  // 吹き飛び開始位置
 
+    private CameraController camera;　//カメラ取得用
+
     // =====================================================
     // 初期化処理
     // =====================================================
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-
-        if (targetToFollow != null)
-        {
-            targetRb = targetToFollow.GetComponent<Rigidbody2D>();
-            targetController = targetToFollow.GetComponent<MonoBehaviour>();
-        }
-    }
-
     private void Start()
     {
         baseScale = transform.localScale;
+        rb = GetComponent<Rigidbody2D>();
+        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
 
         // ターゲット未設定なら自動で Player タグ検索
         if (targetToFollow == null)
@@ -85,7 +78,7 @@ public class Vortex : MonoBehaviour
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
 
         // 吹き飛び中は追従しない
-        if (isKnockback) return;
+        //if (isKnockback) return;
 
         // ターゲットが存在するなら追従
         if (targetToFollow != null)
@@ -140,6 +133,7 @@ public class Vortex : MonoBehaviour
         // 大小比較で処理分岐
         if (myScale > otherScale)
         {
+            camera.ShakeCamera();
             // 自分が大きい → 相手を吹き飛ばす
             Vector2 dir = (otherVortex.transform.position - transform.position).normalized;
 
@@ -152,6 +146,7 @@ public class Vortex : MonoBehaviour
         }
         else if (myScale < otherScale)
         {
+            camera.ShakeCamera();
             // 自分が小さい → 自分が吹き飛ぶ
             Vector2 dir = (transform.position - otherVortex.transform.position).normalized;
 
@@ -164,6 +159,7 @@ public class Vortex : MonoBehaviour
         }
         else
         {
+            camera.ShakeCamera();
             // 同サイズ → 両者吹き飛ぶ
             Vector2 dir = (otherVortex.transform.position - transform.position).normalized;
 

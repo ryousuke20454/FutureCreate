@@ -3,7 +3,7 @@ using UnityEngine;
 public class StaminaBarMove : MonoBehaviour
 {
     [SerializeField]GameObject player;
-    [SerializeField]float differenceY;
+    [SerializeField]GameObject spiral;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,7 +15,7 @@ public class StaminaBarMove : MonoBehaviour
     {
         transform.position = new Vector3(
             player.transform.position.x,
-            player.transform.position.y + differenceY,
+            player.transform.position.y + spiral.transform.localScale.y,
             player.transform.position.z);
     }
 }

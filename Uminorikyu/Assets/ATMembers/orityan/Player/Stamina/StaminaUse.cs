@@ -6,15 +6,24 @@ using UnityEngine.UI;
 
 public class StaminaUse : MonoBehaviour
 {
+    //自分自身のコンポーネント取得用
     Slider slider;
 
-    [SerializeField] GameObject player;
+    //================================================
+    //  ダッシュ判定の設定項目
+    //================================================
     [SerializeField] float stickPower;
     [SerializeField] float dashSpeed;
+    //================================================
+    //  内部変数
+    //================================================
+    GameObject player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //プレイヤーの取得
+        player = GetComponent<StaminaState>().player;
         //スタミナについてるスライダーコンポーネントの取得
         slider = GetComponent<Slider>();
     }
@@ -34,6 +43,7 @@ public class StaminaUse : MonoBehaviour
             else
             {
                 player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
+                GetComponent<StaminaState>().player.GetComponent<OriiPlayerMove>().barnOut = true;
             }
         }
         else

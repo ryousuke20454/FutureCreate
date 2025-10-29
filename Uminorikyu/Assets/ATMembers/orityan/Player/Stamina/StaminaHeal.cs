@@ -1,34 +1,23 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XInput;
-using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
 
 public class StaminaHeal : MonoBehaviour
 {
-    Gamepad gamepad;
-    XInputController controller;
     //スティック位置の過去情報
     Vector2 stickInputLast = new Vector2(0.0f, 0.0f);
-
+    //スタミナの回復速度
     [SerializeField] float healSpeed;
+
+    PlayerInputScript input;
+    Gamepad gamepad;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //ゲームパッドの取得
-        gamepad = Gamepad.current;
-        controller = Gamepad.current as XInputController;
-
-        if (controller != null)
-        {
-            Debug.Log("XInput Controller detected!");
-        }
-
-        if (gamepad != null)
-        {
-            Debug.Log("ゲームパッドが接続されています");
-        }
+        input = GetComponent<PlayerInputScript>();
+        gamepad = input.controller;
     }
 
     // Update is called once per frame
@@ -37,25 +26,17 @@ public class StaminaHeal : MonoBehaviour
         if (gamepad != null)
         {
             //最新のレバーの位置の取得
-            Vector2 stickInput = gamepad.leftStick.ReadValue();
-
-            if (stickInput.x != 0.0f && 
-                stickInput.y != 0.0f &&
-                stickInput != stickInputLast)
-            {
-                GetComponent<Slider>().value += healSpeed;
-                stickInputLast = stickInput;
-            }
-        }
-        if (controller != null)
-        {
-            //最新のレバーの位置の取得
-            Vector2 stickInput = controller.dpad.ReadValue();
+            Vector2 stickInput = input.GetStickValue(gamepad);
 
             if (stickInput != stickInputLast)
             {
-                GetComponent<Slider>().value += healSpeed * 1.8f;
+                GetComponent<Slider>().value += healSpeed;
                 stickInputLast = stickInput;
+
+                if (GetComponent<Slider>().value >= 100)
+                {
+                    GetComponent<StaminaState>().player.GetComponent<OriiPlayerMove>().barnOut = false;
+                }
             }
         }
     }

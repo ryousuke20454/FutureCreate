@@ -8,6 +8,8 @@ public class OriiPlayerMove : MonoBehaviour
 {
     [SerializeField] public float moveSpeed;
     public bool dash;
+    public bool barnOut;
+
     PlayerInputScript input;
     Gamepad gamepad;
 
@@ -16,12 +18,15 @@ public class OriiPlayerMove : MonoBehaviour
     {
         input = GetComponent<PlayerInputScript>();
         gamepad = input.controller;
+
+        dash = false;
+        barnOut = true;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(input.controller != null)
+        if(input.controller != null && !barnOut)
         {
             Vector2 stickInput = input.GetStickValue(gamepad);
 

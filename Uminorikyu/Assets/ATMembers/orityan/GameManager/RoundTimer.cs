@@ -12,7 +12,7 @@ public class RoundTimer : MonoBehaviour
 
     float timeLimit;
     float elapsedTime;
-    int nowTime;
+    public int nowTime;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

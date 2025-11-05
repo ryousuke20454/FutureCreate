@@ -1293,6 +1293,7 @@ MonoBehaviour:
   - {fileID: 102900000, guid: 755b5dc29413d2d418f11ff58db6ceda, type: 3}
   - {fileID: 102900000, guid: 755b5dc29413d2d418f11ff58db6ceda, type: 3}
   - {fileID: 102900000, guid: a4d0cb84b1e1ba14092fce77d425be3b, type: 3}
+  nowTime: 0
 --- !u!114 &1055940820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1348,8 +1349,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventStates:
-  - events: {fileID: 0}
-    percent: 0
+  - events: {fileID: 6408798868887574542, guid: 19c1f34e4f836f441b6f593df51458d5, type: 3}
+    target: {fileID: 0}
+    percent: 50
+    appearance: 0
+  - events: {fileID: 6408798868887574542, guid: c42457bd3f768dc47a51f501af069bfd, type: 3}
+    target: {fileID: 0}
+    percent: 20
     appearance: 0
 --- !u!1 &1320304877
 GameObject:

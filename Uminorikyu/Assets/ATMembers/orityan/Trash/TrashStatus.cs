@@ -4,6 +4,7 @@ public class TrashStatus : MonoBehaviour
 {
     [SerializeField] float size;
     [SerializeField] public int score;
+    [SerializeField] public float glowAmount;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

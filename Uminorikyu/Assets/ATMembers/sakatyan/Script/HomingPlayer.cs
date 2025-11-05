@@ -12,53 +12,59 @@ public class Vortex : MonoBehaviour
     // 追従設定
     // =====================================================
     [Header("追従設定")]
-    [SerializeField] private Transform targetToFollow; // 追従する対象（プレイヤーなど）
-    [SerializeField] private float speed = 2f;         // 通常の追従速度
+    [SerializeField] private Transform targetToFollow;
+    [SerializeField] private float speed = 2f;
 
     // =====================================================
     // サイズ設定
     // =====================================================
     [Header("サイズ設定")]
-    [SerializeField] private float growAmount = 0.05f; // ゴミ吸収時の拡大率
-    [SerializeField] private float maxScale = 1f;      // 最大サイズ制限
+    [SerializeField] private float growAmount = 0.05f;
+    [SerializeField] private float maxScale = 1f;
+
+    // ★変更点：成長速度
+    [SerializeField] private float growSpeed = 3f; // スムーズに拡大する速さ
 
     // =====================================================
     // 回転設定
     // =====================================================
     [Header("回転設定")]
-    [SerializeField] private float rotationSpeed = 180f; // 回転速度（度/秒）
+    [SerializeField] private float rotationSpeed = 180f;
 
     // =====================================================
     // 吹き飛び設定
     // =====================================================
     [Header("吹き飛び設定")]
-    [SerializeField] private float bouncePower = 5f;        // 吹き飛びの力
-    [SerializeField] private float maxBounceDistance = 2f;  // 吹き飛び距離上限
-    [SerializeField] private float stopDuration = 1f;       // 吹き飛び後に停止する時間（秒）
+    [SerializeField] private float bouncePower = 5f;
+    [SerializeField] private float maxBounceDistance = 2f;
+    [SerializeField] private float stopDuration = 1f;
 
     // =====================================================
     // 内部変数
     // =====================================================
-    private Rigidbody2D rb;             // 自分の Rigidbody2D
-    private Rigidbody2D targetRb;       // ターゲットの Rigidbody2D
-    private MonoBehaviour targetController; // プレイヤー操作スクリプト
+    private Rigidbody2D rb;
+    private Rigidbody2D targetRb;
+    private MonoBehaviour targetController;
 
-    private Vector3 baseScale;          // 初期スケール
-    private bool isKnockback = false;   // 吹き飛び中か？
-    private Vector3 knockbackStartPos;  // 吹き飛び開始位置
+    private Vector3 baseScale;
+    private bool isKnockback = false;
+    private Vector3 knockbackStartPos;
 
-    private CameraController camera;　//カメラ取得用
+    private CameraController camera;
+
+    // ★変更点：Lerp用のターゲットスケール
+    private Vector3 targetScale;
 
     // =====================================================
-    // 初期化処理
+    // 初期化
     // =====================================================
     private void Start()
     {
         baseScale = transform.localScale;
+        targetScale = baseScale; // ←初期化（初期スケールと同じに）
         rb = GetComponent<Rigidbody2D>();
         camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
 
-        // ターゲット未設定なら自動で Player タグ検索
         if (targetToFollow == null)
             targetToFollow = GameObject.FindGameObjectWithTag("Player")?.transform;
 
@@ -74,13 +80,20 @@ public class Vortex : MonoBehaviour
     // =====================================================
     private void Update()
     {
-        // 常に回転（見た目用）
+        // 常に回転
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
 
-        // 吹き飛び中は追従しない
-        //if (isKnockback) return;
+        // スケールを滑らかに補間
+        transform.localScale = Vector3.Lerp(
+            transform.localScale,
+            targetScale,
+            Time.deltaTime * growSpeed
+        );
 
-        // ターゲットが存在するなら追従
+        // 吹き飛び中は追従しない
+        if (isKnockback) return;
+
+        // 追従処理
         if (targetToFollow != null)
         {
             transform.position = Vector2.MoveTowards(
@@ -96,11 +109,10 @@ public class Vortex : MonoBehaviour
     // =====================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 吹き飛び中は衝突処理無効
         if (isKnockback) return;
 
         // ------------------------
-        // ゴミとの衝突処理
+        // ゴミとの衝突
         // ------------------------
         if (collision.CompareTag("Trash"))
         {
@@ -111,15 +123,15 @@ public class Vortex : MonoBehaviour
             {
                 Destroy(collision.gameObject);
 
-                // 成長処理（上限あり）
-                float newScale = Mathf.Min(transform.localScale.x + growAmount, maxScale);
-                transform.localScale = new Vector3(newScale, newScale, 1f);
+                //すぐ拡大せず、ターゲットスケールを更新
+                float newScale = Mathf.Min(targetScale.x + growAmount, maxScale);
+                targetScale = new Vector3(newScale, newScale, 1f);
             }
             return;
         }
 
         // ------------------------
-        // 他の渦との衝突処理
+        // 他の渦との衝突
         // ------------------------
         Vortex otherVortex = collision.GetComponent<Vortex>();
         if (otherVortex == null || otherVortex == this) return;
@@ -130,11 +142,9 @@ public class Vortex : MonoBehaviour
         Rigidbody2D otherRb = otherVortex.rb;
         Rigidbody2D otherTargetRb = otherVortex.targetRb;
 
-        // 大小比較で処理分岐
         if (myScale > otherScale)
         {
             camera.ShakeCamera();
-            // 自分が大きい → 相手を吹き飛ばす
             Vector2 dir = (otherVortex.transform.position - transform.position).normalized;
 
             otherRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
@@ -147,7 +157,6 @@ public class Vortex : MonoBehaviour
         else if (myScale < otherScale)
         {
             camera.ShakeCamera();
-            // 自分が小さい → 自分が吹き飛ぶ
             Vector2 dir = (transform.position - otherVortex.transform.position).normalized;
 
             rb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
@@ -160,17 +169,14 @@ public class Vortex : MonoBehaviour
         else
         {
             camera.ShakeCamera();
-            // 同サイズ → 両者吹き飛ぶ
             Vector2 dir = (otherVortex.transform.position - transform.position).normalized;
 
-            // 自分
             rb?.AddForce(-dir * bouncePower, ForceMode2D.Impulse);
             targetRb?.AddForce(-dir * bouncePower, ForceMode2D.Impulse);
             StartKnockback();
             if (targetController != null)
                 targetController.enabled = false;
 
-            // 相手
             otherRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
             otherTargetRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
             otherVortex.StartKnockback();
@@ -180,37 +186,30 @@ public class Vortex : MonoBehaviour
     }
 
     // =====================================================
-    // 吹き飛び開始処理
+    // 吹き飛び開始
     // =====================================================
     public void StartKnockback()
     {
         if (isKnockback) return;
-
         isKnockback = true;
         knockbackStartPos = transform.position;
-
-        // 一定時間後に吹き飛び解除＋追従再開
         StartCoroutine(StopKnockbackAfterDelay());
     }
 
     // =====================================================
-    // 吹き飛び終了処理
+    // 吹き飛び解除
     // =====================================================
     private IEnumerator StopKnockbackAfterDelay()
     {
-        // 一定時間停止
         yield return new WaitForSeconds(stopDuration);
 
         rb.Sleep();
         rb.angularVelocity = 0f;
-
         if (targetRb != null) targetRb.Sleep();
 
-        // プレイヤー操作再開
         if (targetController != null)
             targetController.enabled = true;
 
-        // 状態リセット
         isKnockback = false;
     }
 }

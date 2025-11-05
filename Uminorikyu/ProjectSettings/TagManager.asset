@@ -9,6 +9,7 @@ TagManager:
   - Field
   - Event
   - Effect
+  - Spiral
   layers:
   - Default
   - TransparentFX

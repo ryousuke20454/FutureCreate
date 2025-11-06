@@ -475,6 +475,7 @@ GameObject:
   - component: {fileID: 823536104}
   - component: {fileID: 823536106}
   - component: {fileID: 823536105}
+  - component: {fileID: 823536107}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -539,6 +540,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 823536103}
   m_CullTransparentMesh: 1
+--- !u!114 &823536107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823536103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9824b68b42941c14fa76f738e507ab63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sunnySprite: {fileID: 5498453802433321106, guid: c51a41430ad907f41878585ae236f842, type: 3}
+  cloudySprite: {fileID: -6001342464093351812, guid: 69c9622bcd5ba7e44bcc025254532fa9, type: 3}
+  rainySprite: {fileID: -5948891047066203451, guid: 29712aeb7b7a0154eaa11d4031951eec, type: 3}
 --- !u!1 &835529705
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,9 +817,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9824b68b42941c14fa76f738e507ab63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetImage: {fileID: 823536105}
-  newSprite: {fileID: -6001342464093351812, guid: 69c9622bcd5ba7e44bcc025254532fa9, type: 3}
-  newSprite2: {fileID: -5948891047066203451, guid: 29712aeb7b7a0154eaa11d4031951eec, type: 3}
+  sunnySprite: {fileID: 0}
+  cloudySprite: {fileID: 0}
+  rainySprite: {fileID: 0}
 --- !u!1001 &1792829553
 PrefabInstance:
   m_ObjectHideFlags: 0

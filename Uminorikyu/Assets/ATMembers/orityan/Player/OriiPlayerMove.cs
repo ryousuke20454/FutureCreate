@@ -60,7 +60,7 @@ public class OriiPlayerMove : MonoBehaviour
                 new Vector3(
                     transform.position.x + stickInput.x * moveSpeed,
                     transform.position.y + stickInput.y * moveSpeed,
-                    0.0f);
+                    -1.0f);
         }
         else
         {
@@ -69,22 +69,22 @@ public class OriiPlayerMove : MonoBehaviour
                 if (Input.GetKey(KeyCode.W))
                 {
                     transform.position = new Vector3(
-                        transform.position.x, transform.position.y + moveSpeed, 0.0f);
+                        transform.position.x, transform.position.y + moveSpeed, -1.0f);
                 }
                 if (Input.GetKey(KeyCode.A))
                 {
                     transform.position = new Vector3(
-                        transform.position.x - moveSpeed, transform.position.y, 0.0f);
+                        transform.position.x - moveSpeed, transform.position.y, -1.0f);
                 }
                 if (Input.GetKey(KeyCode.S))
                 {
                     transform.position = new Vector3(
-                        transform.position.x, transform.position.y - moveSpeed, 0.0f);
+                        transform.position.x, transform.position.y - moveSpeed, -1.0f);
                 }
                 if (Input.GetKey(KeyCode.D))
                 {
                     transform.position = new Vector3(
-                        transform.position.x + moveSpeed, transform.position.y, 0.0f);
+                        transform.position.x + moveSpeed, transform.position.y, -1.0f);
                 }
             }
             else
@@ -92,22 +92,22 @@ public class OriiPlayerMove : MonoBehaviour
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
                     transform.position = new Vector3(
-                        transform.position.x, transform.position.y + moveSpeed, 0.0f);
+                        transform.position.x, transform.position.y + moveSpeed, -1.0f);
                 }
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
                     transform.position = new Vector3(
-                        transform.position.x - moveSpeed, transform.position.y, 0.0f);
+                        transform.position.x - moveSpeed, transform.position.y, -1.0f);
                 }
                 if (Input.GetKey(KeyCode.DownArrow))
                 {
                     transform.position = new Vector3(
-                        transform.position.x, transform.position.y - moveSpeed, 0.0f);
+                        transform.position.x, transform.position.y - moveSpeed, -1.0f);
                 }
                 if (Input.GetKey(KeyCode.RightArrow))
                 {
                     transform.position = new Vector3(
-                        transform.position.x + moveSpeed, transform.position.y, 0.0f);
+                        transform.position.x + moveSpeed, transform.position.y, -1.0f);
                 }
             }
         }

@@ -31,10 +31,11 @@ public class TrashSpawner : MonoBehaviour
     [SerializeField] private int maxEnemiesOnScreen = 25; // 画面に表示されるゴミの最大数
     [SerializeField] private float spawnDelayAfterDeath = 2.0f; // ゴミが倒されてからのスポーン待機時間
 
-    [Header("プレイヤー設定")]
-    [SerializeField] private Transform player;
+    [Header("プレイヤー設定 (複数対応)")]
+    [Tooltip("複数のプレイヤーを扱います。ランタイムで Player タグのオブジェクトを検索します。")]
+    private Transform[] players;
     [SerializeField] private float minDistanceFromPlayer = 0.8f; // プレイヤーからの最小距離（矩形外の場合）
-    [SerializeField] private float minSpawnRadius = 3.0f; // プレイヤーがスポーン領域内にいるときの最小距離
+    [SerializeField] private float minSpawnRadius = 1.5f; // プレイヤーがスポーン領域内にいるときの最小距離
 
     [Header("短形スポーン設定")]
     [Tooltip("矩形の幅（X方向, world units）")]
@@ -48,7 +49,8 @@ public class TrashSpawner : MonoBehaviour
     [Header("デバッグ表示設定")]
     [SerializeField] private bool showSpawnRange = true; // スポーン範囲を表示
     private Color spawnRangeColor = Color.yellow; // スポーン矩形の色
-    private Color playerRangeColor = Color.blue; // プレイヤーからの最小距離表示色
+    private Color playerRangeColor = Color.blue; // プレイヤーからの最小距離表示色（矩形外）
+    private Color playerInsideRangeColor = Color.magenta; // プレイヤーが矩形内にいる時の最小距離表示色
 
     // プロパティ
     public TrashSpawnData[] TrashTypes
@@ -69,12 +71,16 @@ public class TrashSpawner : MonoBehaviour
         set => spawnDelayAfterDeath = value;
     }
 
-    public Transform Player => player;
+    // 複数プレイヤー対応プロパティ
+    public Transform[] Players => players;
+
+    // 互換性のため、"PrimaryPlayer" を用意（存在しないときは null）
+    public Transform PrimaryPlayer => (players != null && players.Length > 0) ? players[0] : null;
+
     public float MinDistanceFromPlayer => minDistanceFromPlayer;
     public float MinSpawnRadius => minSpawnRadius;
     public float SpawnAreaWidth => spawnAreaWidth;
     public float SpawnAreaHeight => spawnAreaHeight;
-   // public float SpawnZ => spawnZ;
     public int MaxSpawnAttempts => maxSpawnAttempts;
     public int CurrentEnemiesOnScreen => currentEnemiesOnScreen;
 
@@ -87,18 +93,14 @@ public class TrashSpawner : MonoBehaviour
 
     private void Start()
     {
-        // プレイヤーを自動検索
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
+        // 複数プレイヤーを自動検索（Player タグ）
+        RefreshPlayers();
 
         // Wave開始 - 最初からランダムでスポーン（矩形内）
         SpawnEnemies();
     }
 
-    void  FixedUpdate()
+    void FixedUpdate()
     {
         if (!canSpawn)
         {
@@ -202,13 +204,8 @@ public class TrashSpawner : MonoBehaviour
             return false;
         }
 
-        // 2D用に Z を固定
-        //spawnPosition.z = spawnZ;
-
+        // 2D用に Z を固定（プレハブ側で対応）
         GameObject newTrash = Instantiate(trashData.TrashPrefab, spawnPosition, Quaternion.identity);
-
-        // DisableComponent が無い環境のため、参照と処理は削除しました。
-        // 必要ならゴミプレハブ側に「DisableAfterDelay」等のスクリプトを付けて制御してください。
 
         // ついてなければゴミにTrashタグを付ける
         if (newTrash != null && newTrash.tag != "Trash")
@@ -244,21 +241,21 @@ public class TrashSpawner : MonoBehaviour
             // 矩形領域内のランダム位置（均等分布）
             float rx = Random.Range(-halfW, halfW);
             float ry = Random.Range(-halfH, halfH);
-            Vector3 candidatePosition = new Vector3(spawnerCenter.x + rx, spawnerCenter.y + ry/*, spawnZ*/) ;
+            Vector3 candidatePosition = new Vector3(spawnerCenter.x + rx, spawnerCenter.y + ry /*, spawnZ*/);
 
-            // プレイヤーからの距離チェック（XY 平面）
-            if (player != null)
+            // プレイヤー群の中で最も近いプレイヤーを取得
+            Transform nearestPlayer = GetNearestPlayer(candidatePosition, out float distanceToNearest);
+
+            if (nearestPlayer != null)
             {
-                float distanceToPlayer = Vector2.Distance(new Vector2(candidatePosition.x, candidatePosition.y),
-                                                          new Vector2(player.position.x, player.position.y));
-
-                // プレイヤーが矩形内にいるかチェック
-                bool playerInsideRect = Mathf.Abs(player.position.x - spawnerCenter.x) <= halfW &&
-                                        Mathf.Abs(player.position.y - spawnerCenter.y) <= halfH;
+                // そのプレイヤーが矩形内にいるかチェック（スパナー矩形と比較）
+                bool playerInsideRect = Mathf.Abs(nearestPlayer.position.x - spawnerCenter.x) <= halfW &&
+                                        Mathf.Abs(nearestPlayer.position.y - spawnerCenter.y) <= halfH;
 
                 if (playerInsideRect)
                 {
-                    if (distanceToPlayer >= minSpawnRadius)
+                    // プレイヤーが矩形内にいる場合は minSpawnRadius を利用
+                    if (distanceToNearest >= minSpawnRadius)
                     {
                         spawnPosition = candidatePosition;
                         return true;
@@ -266,7 +263,8 @@ public class TrashSpawner : MonoBehaviour
                 }
                 else
                 {
-                    if (distanceToPlayer >= minDistanceFromPlayer)
+                    // プレイヤーが矩形外にいる場合は minDistanceFromPlayer を利用
+                    if (distanceToNearest >= minDistanceFromPlayer)
                     {
                         spawnPosition = candidatePosition;
                         return true;
@@ -275,13 +273,38 @@ public class TrashSpawner : MonoBehaviour
             }
             else
             {
-                // プレイヤーがいない場合はそのままスポーン
+                // プレイヤーが存在しない場合はそのままスポーン
                 spawnPosition = candidatePosition;
                 return true;
             }
         }
 
         return false;
+    }
+
+    // 最も近いプレイヤーを返す。プレイヤーが存在しない場合は null を返す
+    Transform GetNearestPlayer(Vector3 point, out float nearestDistance)
+    {
+        nearestDistance = float.MaxValue;
+        Transform nearest = null;
+
+        if (players == null || players.Length == 0) return null;
+
+        for (int i = 0; i < players.Length; i++)
+        {
+            Transform p = players[i];
+            if (p == null) continue;
+
+            float d = Vector2.Distance(new Vector2(point.x, point.y),
+                                       new Vector2(p.position.x, p.position.y));
+            if (d < nearestDistance)
+            {
+                nearestDistance = d;
+                nearest = p;
+            }
+        }
+
+        return nearest;
     }
 
     // 破壊されたゴミオブジェクトをリストから削除
@@ -364,6 +387,24 @@ public class TrashSpawner : MonoBehaviour
         return validEnemies;
     }
 
+    // Player タグの付いたオブジェクトを再検索して players 配列を更新する
+    public void RefreshPlayers()
+    {
+        GameObject[] playerObjs = GameObject.FindGameObjectsWithTag("Player");
+        if (playerObjs != null && playerObjs.Length > 0)
+        {
+            players = new Transform[playerObjs.Length];
+            for (int i = 0; i < playerObjs.Length; i++)
+            {
+                players[i] = playerObjs[i].transform;
+            }
+        }
+        else
+        {
+            players = new Transform[0];
+        }
+    }
+
     void DrawSpawnRanges()
     {
         Vector3 spawnerPos = transform.position;
@@ -372,11 +413,33 @@ public class TrashSpawner : MonoBehaviour
         // 矩形を描画（XY 平面）
         DrawRectangle(spawnerPos, spawnAreaWidth, spawnAreaHeight, spawnRangeColor);
 
-        // プレイヤーがいる場合、プレイヤーからの最小距離円を描画
-        if (player != null)
+        // 各プレイヤーについて円を描画（矩形内か外かで色を変える）
+        if (players != null && players.Length > 0)
         {
-            Vector3 playerPos = new Vector3(player.position.x, player.position.y/*, spawnZ*/);
-            DrawCircle(playerPos, minDistanceFromPlayer, playerRangeColor);
+            float halfW = spawnAreaWidth * 0.5f;
+            float halfH = spawnAreaHeight * 0.5f;
+            Vector3 spawnerCenter = transform.position;
+
+            foreach (Transform p in players)
+            {
+                if (p == null) continue;
+
+                bool playerInsideRect = Mathf.Abs(p.position.x - spawnerCenter.x) <= halfW &&
+                                        Mathf.Abs(p.position.y - spawnerCenter.y) <= halfH;
+
+                Vector3 playerPos = new Vector3(p.position.x, p.position.y /*, spawnZ*/);
+
+                if (playerInsideRect)
+                {
+                    // プレイヤーが矩形内にいる場合は minSpawnRadius を表示（強調色）
+                    DrawCircle(playerPos, minSpawnRadius, playerInsideRangeColor);
+                }
+                else
+                {
+                    // 矩形外のプレイヤーには minDistanceFromPlayer を表示
+                    DrawCircle(playerPos, minDistanceFromPlayer, playerRangeColor);
+                }
+            }
         }
     }
 

@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 1, g: 0, b: 0, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 1
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -27,10 +27,10 @@ RenderSettings:
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
-  m_HaloStrength: 0.5
+  m_HaloStrength: 1
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
-  m_HaloTexture: {fileID: 0}
+  m_HaloTexture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
@@ -94,7 +94,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: d8f3108ec97894942be92ec128084612, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -770,6 +770,7 @@ MonoBehaviour:
   speed: 20
   growAmount: 0.5
   maxScale: 3
+  growSpeed: 3
   rotationSpeed: 180
   bouncePower: 5
   maxBounceDistance: 2
@@ -1085,13 +1086,12 @@ MonoBehaviour:
   minWaveRadius: 0.5
   maxWaveRadius: 3
   maxWaves: 6
-  waveBaseStrength: 180
-  waveLifeTime: 12
+  waveFlowSpeed: 5
+  waveInfluenceStrength: 5
+  waveLifeTime: 50
   minSpacingBetweenWaves: 3
   avoidFieldEdgeMargin: 0.5
-  playerResistMultiplier: 0.6
-  playerAssistMultiplier: 0.5
-  trashForceMultiplier: 2
+  trashMovementSpeed: 2
   affectTrash: 1
   debugLogs: 1
 --- !u!1 &652002699 stripped
@@ -1521,7 +1521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLimits:
-  - 30
+  - 99
   scenes:
   - {fileID: 102900000, guid: 755b5dc29413d2d418f11ff58db6ceda, type: 3}
   nowTime: 0
@@ -1736,6 +1736,7 @@ MonoBehaviour:
   speed: 20
   growAmount: 0.5
   maxScale: 3
+  growSpeed: 3
   rotationSpeed: 180
   bouncePower: 5
   maxBounceDistance: 2
@@ -2049,6 +2050,67 @@ MonoBehaviour:
   player: {fileID: 501940472}
   use: {fileID: 1980150528}
   heal: {fileID: 1980150527}
+--- !u!1001 &6063100882751338455
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 203043495218058835, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_Name
+      value: Fog
+      objectReference: {fileID: 0}
+    - target: {fileID: 203043495218058835, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.22
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.059713133
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6453632710058508968, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 848b7d26b96ce2148af6faddeb76e406, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2064,3 +2126,4 @@ SceneRoots:
   - {fileID: 641727500}
   - {fileID: 40810279}
   - {fileID: 708987036}
+  - {fileID: 6063100882751338455}

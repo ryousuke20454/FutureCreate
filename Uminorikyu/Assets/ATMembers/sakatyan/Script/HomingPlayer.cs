@@ -3,97 +3,86 @@ using System.Collections;
 
 /// <summary>
 /// プレイヤーを追従し、
-/// 衝突時に吹き飛び → 一定距離 or 一定時間後に停止 → 追従再開する渦スクリプト
+/// 他の渦と衝突した際に吹き飛び演出を行うスクリプト。
+/// プレイヤーも同じ距離だけ一緒に吹き飛び、
+/// 吹き飛び中は移動が無効化＆点滅演出される。
 /// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class Vortex : MonoBehaviour
 {
     // =====================================================
-    // 追従設定
+    // 設定値
     // =====================================================
     [Header("追従設定")]
     [SerializeField] private Transform targetToFollow;
     [SerializeField] private float speed = 2f;
 
-    // =====================================================
-    // サイズ設定
-    // =====================================================
     [Header("サイズ設定")]
     [SerializeField] private float growAmount = 0.05f;
     [SerializeField] private float maxScale = 1f;
+    [SerializeField] private float growSpeed = 3f;
 
-    // ★変更点：成長速度
-    [SerializeField] private float growSpeed = 3f; // スムーズに拡大する速さ
-
-    // =====================================================
-    // 回転設定
-    // =====================================================
     [Header("回転設定")]
     [SerializeField] private float rotationSpeed = 180f;
 
-    // =====================================================
-    // 吹き飛び設定
-    // =====================================================
     [Header("吹き飛び設定")]
-    [SerializeField] private float bouncePower = 5f;
-    [SerializeField] private float maxBounceDistance = 2f;
-    [SerializeField] private float stopDuration = 1f;
+    [SerializeField] private float bounceDistance = 1.5f;   // 吹き飛び距離
+    [SerializeField] private float bounceDuration = 0.6f;   // 吹き飛び時間
+    [SerializeField] private float stopDuration = 0.5f;     // 停止時間
+    [SerializeField] private float scaleTolerance = 0.02f;  // 同サイズ誤差
+    [SerializeField] private float blinkInterval = 0.15f;   // 点滅間隔
 
     // =====================================================
     // 内部変数
     // =====================================================
     private Rigidbody2D rb;
-    private Rigidbody2D targetRb;
-    private MonoBehaviour targetController;
-
-    private Vector3 baseScale;
-    private bool isKnockback = false;
-    private Vector3 knockbackStartPos;
-
+    private Collider2D col;
     private CameraController camera;
-
-    // ★変更点：Lerp用のターゲットスケール
+    private bool isKnockback = false;
+    private Vector3 baseScale;
     private Vector3 targetScale;
+
+    // プレイヤー関連
+    private Rigidbody2D playerRb;
+    private OriiPlayerMove playerController;
+    private SpriteRenderer playerRenderer;
+    private Coroutine blinkCoroutine;
+
+    public Transform TargetToFollow => targetToFollow;
 
     // =====================================================
     // 初期化
     // =====================================================
     private void Start()
     {
-        baseScale = transform.localScale;
-        targetScale = baseScale; // ←初期化（初期スケールと同じに）
         rb = GetComponent<Rigidbody2D>();
-        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+        col = GetComponent<Collider2D>();
+        camera = GameObject.FindGameObjectWithTag("MainCamera")?.GetComponent<CameraController>();
+
+        baseScale = transform.localScale;
+        targetScale = baseScale;
 
         if (targetToFollow == null)
             targetToFollow = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         if (targetToFollow != null)
         {
-            targetRb = targetToFollow.GetComponent<Rigidbody2D>();
-            targetController = targetToFollow.GetComponent<MonoBehaviour>();
+            playerRb = targetToFollow.GetComponent<Rigidbody2D>();
+            playerController = targetToFollow.GetComponent<OriiPlayerMove>();
+            playerRenderer = targetToFollow.GetComponent<SpriteRenderer>();
         }
     }
 
     // =====================================================
-    // 毎フレーム処理
+    // 更新処理
     // =====================================================
     private void Update()
     {
-        // 常に回転
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+        transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * growSpeed);
 
-        // スケールを滑らかに補間
-        transform.localScale = Vector3.Lerp(
-            transform.localScale,
-            targetScale,
-            Time.deltaTime * growSpeed
-        );
-
-        // 吹き飛び中は追従しない
         if (isKnockback) return;
 
-        // 追従処理
         if (targetToFollow != null)
         {
             transform.position = Vector2.MoveTowards(
@@ -105,15 +94,14 @@ public class Vortex : MonoBehaviour
     }
 
     // =====================================================
-    // 衝突処理
+    // 衝突判定
     // =====================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // 自分が吹き飛び中なら無視
         if (isKnockback) return;
 
-        // ------------------------
-        // ゴミとの衝突
-        // ------------------------
+        // ---- ゴミとの接触 ----
         if (collision.CompareTag("Trash"))
         {
             float vortexScale = transform.localScale.x;
@@ -122,94 +110,120 @@ public class Vortex : MonoBehaviour
             if (vortexScale >= trashScale)
             {
                 Destroy(collision.gameObject);
-
-                //すぐ拡大せず、ターゲットスケールを更新
                 float newScale = Mathf.Min(targetScale.x + growAmount, maxScale);
                 targetScale = new Vector3(newScale, newScale, 1f);
             }
             return;
         }
 
-        // ------------------------
-        // 他の渦との衝突
-        // ------------------------
+        // ---- 他の渦との衝突 ----
         Vortex otherVortex = collision.GetComponent<Vortex>();
         if (otherVortex == null || otherVortex == this) return;
+        if (otherVortex.isKnockback) return;
 
         float myScale = transform.localScale.x;
         float otherScale = otherVortex.transform.localScale.x;
 
-        Rigidbody2D otherRb = otherVortex.rb;
-        Rigidbody2D otherTargetRb = otherVortex.targetRb;
+        Vector2 dir = (transform.position - otherVortex.transform.position).normalized;
+        if (dir.sqrMagnitude < 0.01f)
+            dir = Random.insideUnitCircle.normalized;
 
-        if (myScale > otherScale)
+        //自分と相手の大きさを比較→誤差判定以下だったら一緒に吹き飛ぶ
+        if (Mathf.Abs(myScale - otherScale) < scaleTolerance)
         {
-            camera.ShakeCamera();
-            Vector2 dir = (otherVortex.transform.position - transform.position).normalized;
-
-            otherRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
-            otherTargetRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
-
-            otherVortex.StartKnockback();
-            if (otherVortex.targetController != null)
-                otherVortex.targetController.enabled = false;
+            camera?.ShakeCamera();
+            StartCoroutine(KnockbackWithPlayer(dir));
+            otherVortex.StartCoroutine(otherVortex.KnockbackWithPlayer(-dir));
         }
-        else if (myScale < otherScale)
+
+        else if (myScale > otherScale)
         {
-            camera.ShakeCamera();
-            Vector2 dir = (transform.position - otherVortex.transform.position).normalized;
-
-            rb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
-            targetRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
-
-            StartKnockback();
-            if (targetController != null)
-                targetController.enabled = false;
+            camera?.ShakeCamera();
+            otherVortex.StartCoroutine(otherVortex.KnockbackWithPlayer(-dir));
         }
+
         else
         {
-            camera.ShakeCamera();
-            Vector2 dir = (otherVortex.transform.position - transform.position).normalized;
-
-            rb?.AddForce(-dir * bouncePower, ForceMode2D.Impulse);
-            targetRb?.AddForce(-dir * bouncePower, ForceMode2D.Impulse);
-            StartKnockback();
-            if (targetController != null)
-                targetController.enabled = false;
-
-            otherRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
-            otherTargetRb?.AddForce(dir * bouncePower, ForceMode2D.Impulse);
-            otherVortex.StartKnockback();
-            if (otherVortex.targetController != null)
-                otherVortex.targetController.enabled = false;
+            camera?.ShakeCamera();
+            StartCoroutine(KnockbackWithPlayer(dir));
         }
     }
 
     // =====================================================
-    // 吹き飛び開始
+    // 吹き飛ばし処理
     // =====================================================
-    public void StartKnockback()
+    private IEnumerator KnockbackWithPlayer(Vector2 direction)
     {
-        if (isKnockback) return;
         isKnockback = true;
-        knockbackStartPos = transform.position;
-        StartCoroutine(StopKnockbackAfterDelay());
+        if (col != null) col.enabled = false; // 衝突無効化
+
+        // プレイヤー操作停止
+        if (playerController != null)
+            playerController.enabled = false;
+
+        // プレイヤー点滅開始（既存があれば停止）
+        if (playerRenderer != null)
+        {
+            if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+            blinkCoroutine = StartCoroutine(BlinkPlayer());
+        }
+
+        // 初期位置
+        Vector3 startPosVortex = transform.position;
+        Vector3 startPosPlayer = targetToFollow != null ? targetToFollow.position : Vector3.zero;
+
+        // 吹き飛び距離（サイズで軽減されすぎないよう補正）
+        float scaleFactor = Mathf.Clamp(transform.localScale.x, 0.8f, 3f);
+        float power = Mathf.Lerp(bounceDistance, bounceDistance * 0.5f, (scaleFactor - 0.8f) / 2.2f);
+        Vector3 targetOffset = (Vector3)(direction.normalized * power);
+
+        // スムーズ補間
+        float elapsed = 0f;
+        while (elapsed < bounceDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / bounceDuration);
+
+            Vector3 offset = targetOffset * t;
+            transform.position = startPosVortex + offset;
+            if (targetToFollow != null)
+                targetToFollow.position = startPosPlayer + offset;
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(stopDuration);
+
+        // プレイヤー操作再開
+        if (playerController != null)
+            playerController.enabled = true;
+
+        // 点滅停止
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+            if (playerRenderer != null)
+                playerRenderer.enabled = true;
+        }
+
+        // 衝突再有効化
+        if (col != null) col.enabled = true;
+
+        isKnockback = false;
     }
 
     // =====================================================
-    // 吹き飛び解除
+    // 点滅処理
     // =====================================================
-    private IEnumerator StopKnockbackAfterDelay()
+    private IEnumerator BlinkPlayer()
     {
-        yield return new WaitForSeconds(stopDuration);
+        while (true)
+        {
+            if (playerRenderer != null)
+                playerRenderer.enabled = !playerRenderer.enabled;
 
-        rb.Sleep();
-        rb.angularVelocity = 0f;
-        if (targetRb != null) targetRb.Sleep();
-
-        if (targetController != null)
-            targetController.enabled = true;
-
-        isKnockback = false;
+            yield return new WaitForSeconds(blinkInterval);
+        }
     }
 }

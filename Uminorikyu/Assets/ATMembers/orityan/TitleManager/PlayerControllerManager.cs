@@ -23,7 +23,7 @@ public class PlayerControllerManager : MonoBehaviour
     public PlayerInfo[] player = new PlayerInfo[2];
     public RoundInfo round;
 
-    void Start()
+    void Awake()
     {
         //このスクリプトのシングルトン化及びスタティック化
         if (controllerManager == null)

@@ -42,6 +42,7 @@ public class OriiPlayerMove : MonoBehaviour
             {
                 Debug.Log("›‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½");
             }
+
             if (input.GetCrossButton(gamepad))
             {
                 Debug.Log("~‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½");

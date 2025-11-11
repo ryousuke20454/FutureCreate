@@ -3,8 +3,10 @@ using UnityEngine.UI;
 
 public class ChargeCountdown: MonoBehaviour
 {
+    [SerializeField] GameObject[] players;
     [SerializeField] float countTimeMax;
-    [SerializeField] GameObject canvas;
+    [SerializeField] GameObject manager;
+    [SerializeField] Slider[] stamina;
 
     float count;
     Text text;
@@ -16,7 +18,7 @@ public class ChargeCountdown: MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
         count += Time.deltaTime;
 
@@ -25,6 +27,13 @@ public class ChargeCountdown: MonoBehaviour
 
         if (now == -1)
         {
+            manager.GetComponent<CanvasManager>().CanvasSwitch(1, true);
+            manager.GetComponent<CanvasManager>().CanvasSwitch(2, true);
+            stamina[0].GetComponent<StaminaCopy>().Copy();
+            stamina[1].GetComponent<StaminaCopy>().Copy();
+            players[0].GetComponent<OriiPlayerMove>().nowEvent = false;
+            players[1].GetComponent<OriiPlayerMove>().nowEvent = false;
+            manager.GetComponent<CanvasManager>().CanvasSwitch(0, false);
         }
     }
 }

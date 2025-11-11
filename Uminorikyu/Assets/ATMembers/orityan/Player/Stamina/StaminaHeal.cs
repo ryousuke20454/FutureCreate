@@ -4,13 +4,15 @@ using UnityEngine.UI;
 
 public class StaminaHeal : MonoBehaviour
 {
-    [SerializeField] bool mode;
     [SerializeField] float staminaMax;
 
     //スティック位置の過去情報
     Vector2 stickInputLast = new Vector2(0.0f, 0.0f);
     //スタミナの回復速度
     [SerializeField] float healSpeed;
+    //プレイヤーの取得
+    [SerializeField]GameObject player;
+
 
     PlayerInputScript input;
     Gamepad gamepad;
@@ -38,9 +40,10 @@ public class StaminaHeal : MonoBehaviour
 
                 if (GetComponent<Slider>().value >= staminaMax)
                 {
-                    if (mode)
+                    if (!player.GetComponent<OriiPlayerMove>().nowEvent)
                     {
-                        GetComponent<StaminaState>().player.GetComponent<OriiPlayerMove>().barnOut = false;
+                        player.GetComponent<OriiPlayerMove>().barnOut = false;
+                        Debug.Log(GetComponent<Slider>().value);
                     }
                     else
                     {

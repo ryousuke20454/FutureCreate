@@ -519,7 +519,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 300}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1062023916
 MonoBehaviour:
@@ -533,9 +533,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9824b68b42941c14fa76f738e507ab63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sunnySprite: {fileID: 5498453802433321106, guid: c51a41430ad907f41878585ae236f842, type: 3}
-  cloudySprite: {fileID: -6001342464093351812, guid: 69c9622bcd5ba7e44bcc025254532fa9, type: 3}
-  rainySprite: {fileID: -5948891047066203451, guid: 29712aeb7b7a0154eaa11d4031951eec, type: 3}
+  sunnySprite: {fileID: -3080672920491922989, guid: c839ee4ad35e3454aac95d10dee7fcf9, type: 3}
+  cloudySprite: {fileID: 8897052305233465208, guid: e2c4452bb300a2541ab602d466b45330, type: 3}
+  rainySprite: {fileID: 7437785893278378717, guid: 5981d3dea7a5a1b4f9408507dbf2ebf2, type: 3}
 --- !u!114 &1062023917
 MonoBehaviour:
   m_ObjectHideFlags: 0

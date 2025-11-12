@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 /// <summary>
 /// プレイヤーを追従し、
@@ -31,6 +32,18 @@ public class Vortex : MonoBehaviour
     [SerializeField] private float stopDuration = 0.5f;     // 停止時間
     [SerializeField] private float scaleTolerance = 0.02f;  // 同サイズ誤差
     [SerializeField] private float blinkInterval = 0.15f;   // 点滅間隔
+
+
+    [Header("スコアポップアップ設定")]
+    [SerializeField, Tooltip("スコアポップアップ用プレハブ(Resources内)")]
+    private GameObject floatingScorePrefab;
+    [SerializeField, Tooltip("World Space Canvas（UI表示先）")]
+    private Canvas worldSpaceCanvas;
+
+    [Header("プレイヤー番号設定")]
+    [SerializeField] private int playerNum = 0;
+
+
 
     // =====================================================
     // 内部変数
@@ -109,6 +122,14 @@ public class Vortex : MonoBehaviour
 
             if (vortexScale >= trashScale)
             {
+                if (worldSpaceCanvas != null)
+                {
+                    ShowFloatingText(collision.gameObject.transform.position,
+                        collision.gameObject.GetComponent<TrashStatus>().score);
+                }
+
+                PlayerControllerManager.controllerManager.SetScore(playerNum, collision.gameObject.GetComponent<TrashStatus>().score);
+
                 Destroy(collision.gameObject);
                 float newScale = Mathf.Min(targetScale.x + growAmount, maxScale);
                 targetScale = new Vector3(newScale, newScale, 1f);
@@ -225,5 +246,36 @@ public class Vortex : MonoBehaviour
 
             yield return new WaitForSeconds(blinkInterval);
         }
+    }
+
+    private void ShowFloatingText(Vector3 worldPos, int score)
+    {
+        if (floatingScorePrefab == null) return;
+
+        // World Space Canvas の子として生成
+        GameObject popup;
+        if (worldSpaceCanvas != null)
+        {
+            popup = Instantiate(floatingScorePrefab, worldPos, Quaternion.identity, worldSpaceCanvas.transform);
+        }
+        else
+        {
+            popup = Instantiate(floatingScorePrefab, worldPos, Quaternion.identity);
+        }
+
+        // テキスト設定
+        FloatingScoreText textComp = popup.GetComponent<FloatingScoreText>();
+        if (textComp != null)
+        {
+            textComp.SetText(score.ToString());
+        }
+
+        // カメラの方向を向かせる（ビルボード効果）
+        if (Camera.main != null)
+        {
+            popup.transform.forward = Camera.main.transform.forward;
+        }
+
+        Debug.Log($"★ FloatingScoreText 生成！ pos={worldPos}, alpha={popup.GetComponentInChildren<TextMeshProUGUI>().color.a}");
     }
 }

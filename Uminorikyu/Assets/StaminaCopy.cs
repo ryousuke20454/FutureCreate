@@ -14,6 +14,5 @@ public class StaminaCopy : MonoBehaviour
     public void Copy()
     {
         slider.value = mine.value;
-        Debug.Log("ŒÄ‚Ño‚³‚ê‚Ä‚¢‚Ü‚·");
     }
 }

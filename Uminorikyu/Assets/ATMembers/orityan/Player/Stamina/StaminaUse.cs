@@ -12,8 +12,12 @@ public class StaminaUse : MonoBehaviour
     //================================================
     //  ダッシュ判定の設定項目
     //================================================
+    [Header("ダッシュ判定の設定項目")]
     [SerializeField] float stickPower;
     [SerializeField] float dashSpeed;
+    [Header("バーンアウトのパーティクル取得の設定項目")]
+    [SerializeField] ParticleSystem particle;
+
     //================================================
     //  内部変数
     //================================================
@@ -43,6 +47,10 @@ public class StaminaUse : MonoBehaviour
             else
             {
                 player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
+                if (particle != null)
+                {
+                    particle.Play();
+                }
                 GetComponent<StaminaState>().player.GetComponent<OriiPlayerMove>().barnOut = true;
             }
         }

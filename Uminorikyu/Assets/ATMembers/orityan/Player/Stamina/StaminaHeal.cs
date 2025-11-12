@@ -12,7 +12,7 @@ public class StaminaHeal : MonoBehaviour
     [SerializeField] float healSpeed;
     //ÉvÉåÉCÉÑÅ[ÇÃéÊìæ
     [SerializeField]GameObject player;
-
+    [SerializeField] ParticleSystem particle;
 
     PlayerInputScript input;
     Gamepad gamepad;
@@ -42,6 +42,10 @@ public class StaminaHeal : MonoBehaviour
                 {
                     if (!player.GetComponent<OriiPlayerMove>().nowEvent)
                     {
+                        if (particle != null)
+                        {
+                            particle.Stop();
+                        }
                         player.GetComponent<OriiPlayerMove>().barnOut = false;
                         Debug.Log(GetComponent<Slider>().value);
                     }

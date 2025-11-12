@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1084382487457325121}
-  - component: {fileID: 670986433874656078}
+  - component: {fileID: -3061592118333893998}
   m_Layer: 0
   m_Name: WaveEvent
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &670986433874656078
+--- !u!114 &-3061592118333893998
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,15 +45,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wavePrefab: {fileID: 7218256269083791261, guid: 2aca9cdc94d2e4a4786d3cd7194d4d2d, type: 3}
-  minWaveRadius: 3
+  minWaveRadius: 0.5
   maxWaveRadius: 3
-  maxWaves: 1
-  waveBaseStrength: 180
+  maxWaves: 6
+  waveFlowSpeed: 5
+  waveInfluenceStrength: 10
   waveLifeTime: 30
   minSpacingBetweenWaves: 3
   avoidFieldEdgeMargin: 0.5
-  playerResistMultiplier: 0.6
-  playerAssistMultiplier: 0.5
-  trashForceMultiplier: 1
+  trashMovementSpeed: 2
   affectTrash: 1
   debugLogs: 0

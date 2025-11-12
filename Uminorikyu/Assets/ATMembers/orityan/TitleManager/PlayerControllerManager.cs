@@ -36,9 +36,10 @@ public class PlayerControllerManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        player[0].score = 100;
+        player[0].score = 0;
         player[1].score = 0;
         round.roundNum = 1;
+        round.weatherNum = 1;
     }
 
     void Update() 
@@ -74,5 +75,20 @@ public class PlayerControllerManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetScore(int playerNum ,int score)
+    {
+        player[playerNum].score += score;
+    }
+
+    public void RestartGame()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            player[i].score = 0;
+        }
+
+        round.roundNum = 1;
     }
 }

@@ -112,10 +112,13 @@ public class EventPlayerTele : MonoBehaviour
         }
 
         // === 3. ÉèÅ[Évèàóù ===
-        Vector3 randomPos = GetRandomPositionInCamera();
+        //Vector3 randomPos = GetRandomPositionInCamera();
+        Vector3 randomPos = new Vector3(Random.Range(-15.0f,15.0f), Random.Range(-10.0f, 10.0f),-1.0f);
+
         player.position = randomPos;
         if (targetVortex != null)
         {
+            randomPos.z = 0.0f;
             targetVortex.transform.position = randomPos;
         }
 

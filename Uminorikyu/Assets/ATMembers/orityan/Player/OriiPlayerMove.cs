@@ -114,5 +114,34 @@ public class OriiPlayerMove : MonoBehaviour
                 }
             }
         }
+
+
+        if (transform.position.x > 15.0f)
+        {
+            transform.position = new Vector3(15.0f,
+                transform.position.y,
+                transform.position.z);
+        }
+        else if (transform.position.x < -15.0f)
+        {
+            transform.position = new Vector3(-15.0f,
+            transform.position.y,
+            transform.position.z);
+        }
+
+        if (transform.position.y > 10.0f)
+        {
+            transform.position = new Vector3(
+                transform.position.x,
+                10.0f,
+                transform.position.z);
+        }
+        else if (transform.position.y < -10.0f)
+        {
+            transform.position = new Vector3(
+                transform.position.x,
+                -10.0f,
+                transform.position.z);
+        }
     }
 }

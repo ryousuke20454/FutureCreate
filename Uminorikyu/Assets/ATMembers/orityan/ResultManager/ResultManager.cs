@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ResultManager : MonoBehaviour
 {
-    [SerializeField] SceneAsset scene;
+    [SerializeField] string scene;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,7 +17,7 @@ public class ResultManager : MonoBehaviour
     {
         if (PlayerControllerManager.controllerManager.player[0].gamepad.buttonSouth.IsPressed())
         {
-            SceneManager.LoadScene(scene.name);
+            SceneManager.LoadScene(scene);
         }
     }
 }

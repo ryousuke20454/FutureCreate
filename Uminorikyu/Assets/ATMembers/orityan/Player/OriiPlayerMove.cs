@@ -9,6 +9,7 @@ public class OriiPlayerMove : MonoBehaviour
     [SerializeField] public float moveSpeed;
     public bool dash;
     public bool barnOut;
+    public bool nowEvent;
 
     PlayerInputScript input;
     Gamepad gamepad;
@@ -21,6 +22,7 @@ public class OriiPlayerMove : MonoBehaviour
 
         dash = false;
         barnOut = true;
+        nowEvent = true;
     }
 
     // Update is called once per frame
@@ -42,6 +44,7 @@ public class OriiPlayerMove : MonoBehaviour
             {
                 Debug.Log("›‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½");
             }
+
             if (input.GetCrossButton(gamepad))
             {
                 Debug.Log("~‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½");

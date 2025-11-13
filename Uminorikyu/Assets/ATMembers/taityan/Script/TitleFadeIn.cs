@@ -31,6 +31,7 @@ public class TitleFadeIn : MonoBehaviour
 
     private IEnumerator CloseFusumaAndLoadScene()
     {
+
         float time = 0f;
 
         while (time < slideDuration)
@@ -50,3 +51,5 @@ public class TitleFadeIn : MonoBehaviour
         SceneManager.LoadScene(nextSceneName);
     }
 }
+
+

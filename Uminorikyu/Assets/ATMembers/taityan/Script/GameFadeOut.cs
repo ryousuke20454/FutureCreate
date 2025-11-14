@@ -20,8 +20,8 @@ public class GameFadeOut : MonoBehaviour
         rightStartPos = fusumaRight.anchoredPosition;
 
         // 終了位置（左右の外側へ移動）
-        leftEndPos = new Vector2(-960, leftStartPos.y);
-        rightEndPos = new Vector2(960, rightStartPos.y);
+        leftEndPos = new Vector2(-1920, leftStartPos.y);
+        rightEndPos = new Vector2(1920, rightStartPos.y);
 
         // アニメーション開始
         StartCoroutine(OpenFusuma());

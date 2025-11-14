@@ -3,6 +3,15 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+public enum Round
+{ 
+    Title,
+    Round1,
+    Round2,
+    Round3,
+    Result
+}
+
 public struct PlayerInfo
 {
     public Gamepad gamepad;
@@ -12,7 +21,7 @@ public struct PlayerInfo
 public struct RoundInfo
 {
     public int weatherNum;
-    public int roundNum;
+    public Round roundNum;
 }
 
 public class PlayerControllerManager : MonoBehaviour
@@ -38,7 +47,7 @@ public class PlayerControllerManager : MonoBehaviour
 
         player[0].score = 0;
         player[1].score = 0;
-        round.roundNum = 1;
+        round.roundNum = Round.Round1;
         round.weatherNum = 1;
     }
 
@@ -89,6 +98,6 @@ public class PlayerControllerManager : MonoBehaviour
             player[i].score = 0;
         }
 
-        round.roundNum = 1;
+        round.roundNum = Round.Title;
     }
 }

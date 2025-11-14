@@ -7,11 +7,13 @@ using UnityEngine.SceneManagement;
 
 class TitleSceneManager : MonoBehaviour
 {
-    [SerializeField] string scene;
+    [SerializeField] GameObject fade;
+    bool use;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        use = false;
     }
 
     // Update is called once per frame
@@ -19,7 +21,12 @@ class TitleSceneManager : MonoBehaviour
     {
         if (PlayerControllerManager.controllerManager.player[0].gamepad.buttonSouth.IsPressed())
         {
-            SceneManager.LoadScene(scene);
+            if (!use)
+            {
+                use = true;
+                PlayerControllerManager.controllerManager.round.roundNum = Round.Round1;
+                Instantiate(fade);
+            }
         }
     }
 }

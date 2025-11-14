@@ -33,6 +33,8 @@ public class StaminaHeal : MonoBehaviour
         }
     }
 
+
+
     // Update is called once per frame
     void FixedUpdate()
     {

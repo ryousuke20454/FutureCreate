@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 
 public class TitleFadeIn : MonoBehaviour
 {
     [SerializeField] private RectTransform fusumaLeft;
     [SerializeField] private RectTransform fusumaRight;
     [SerializeField] private float slideDuration = 1.0f; // ふすまが閉まる速度
-    [SerializeField] private string nextSceneName = "SampleGameScene";
+    [SerializeField] private string[] nextSceneName;
 
     private Vector2 leftStartPos;
     private Vector2 rightStartPos;
@@ -22,8 +23,8 @@ public class TitleFadeIn : MonoBehaviour
         rightStartPos = fusumaRight.anchoredPosition;
 
         // 終了位置（中央でぴったり閉まる位置）
-        leftEndPos = new Vector2(0-50, leftStartPos.y);
-        rightEndPos = new Vector2(0+50, rightStartPos.y);
+        leftEndPos = new Vector2(-960 / 2, leftStartPos.y);
+        rightEndPos = new Vector2(960 / 2, rightStartPos.y);
 
         // アニメーション開始
         StartCoroutine(CloseFusumaAndLoadScene());
@@ -48,7 +49,31 @@ public class TitleFadeIn : MonoBehaviour
         // 閉まりきってから1秒待つ
         yield return new WaitForSeconds(1f);
 
-        SceneManager.LoadScene(nextSceneName);
+        if (PlayerControllerManager.controllerManager != null)
+        {
+            switch (PlayerControllerManager.controllerManager.round.roundNum)
+            {
+                case Round.Title:
+                    SceneManager.LoadScene(nextSceneName[0]);
+                    break;
+                case Round.Round1:
+                    SceneManager.LoadScene(nextSceneName[1]);
+                    break;
+                case Round.Round2:
+                    SceneManager.LoadScene(nextSceneName[1]);
+                    break;
+                case Round.Round3:
+                    SceneManager.LoadScene(nextSceneName[1]);
+                    break;
+                case Round.Result:
+                    SceneManager.LoadScene(nextSceneName[2]);
+                    break;
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene("SampleGameScene");
+        }
     }
 }
 

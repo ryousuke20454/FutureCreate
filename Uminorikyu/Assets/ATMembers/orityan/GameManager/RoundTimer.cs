@@ -6,26 +6,28 @@ using UnityEngine.UI;
 public class RoundTimer : MonoBehaviour
 {
     [SerializeField] float[] timeLimits = new float[3];
-    [SerializeField] string[] scenes = new string[3];
+    [SerializeField] GameObject fade;
     Text text;
 
     float timeLimit;
     float elapsedTime;
     public int nowTime;
 
+    bool limit;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (PlayerControllerManager.controllerManager.round.roundNum == 1)
+        if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round1)
         {
             timeLimit = timeLimits[0];
         }
-        else if (PlayerControllerManager.controllerManager.round.roundNum == 2)
+        else if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round2)
         {
             timeLimit = timeLimits[1];
         }
-        else if (PlayerControllerManager.controllerManager.round.roundNum == 3)
+        else if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round3)
         {
             timeLimit = timeLimits[2];
         }
@@ -39,26 +41,31 @@ public class RoundTimer : MonoBehaviour
         elapsedTime += Time.deltaTime;
         nowTime = Mathf.FloorToInt(timeLimit - elapsedTime);
 
-        text.text = nowTime.ToString();
-
         if (nowTime <= 0)
         {
             nowTime = 0;
 
-            if (PlayerControllerManager.controllerManager.round.roundNum == 1)
+            if (!limit)
             {
-                PlayerControllerManager.controllerManager.round.roundNum = 2;
-                SceneManager.LoadScene(scenes[0]);
-            }
-            else if (PlayerControllerManager.controllerManager.round.roundNum == 2)
-            {
-                PlayerControllerManager.controllerManager.round.roundNum = 3;
-                SceneManager.LoadScene(scenes[1]);
-            }
-            else if (PlayerControllerManager.controllerManager.round.roundNum == 3)
-            {
-                SceneManager.LoadScene(scenes[2]);
+                if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round1)
+                {
+                    PlayerControllerManager.controllerManager.round.roundNum = Round.Round2;
+                }
+                else if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round2)
+                {
+                    PlayerControllerManager.controllerManager.round.roundNum = Round.Round3;
+                }
+                else if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round3)
+                {
+                    PlayerControllerManager.controllerManager.round.roundNum = Round.Result;
+                }
+
+                Instantiate(fade);
+
+                limit = true;
             }
         }
+
+        text.text = nowTime.ToString();
     }
 }

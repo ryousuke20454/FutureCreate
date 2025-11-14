@@ -22,23 +22,26 @@ public class RandomWeather : MonoBehaviour
         rnd = Random.Range(1, 4); // ¦ 1`3‚Ì”ÍˆÍ‚Åƒ‰ƒ“ƒ_ƒ€‚È®”’l‚ª•Ô‚é
         image = GetComponent<Image>();
 
-        //°‚ê
-        if (rnd == 1)
+        if (PlayerControllerManager.controllerManager != null)
         {
-            image.sprite = sunnySprite;
-            PlayerControllerManager.controllerManager.round.weatherNum = rnd;
-        }
-        //“Ü‚è
-        if (rnd == 2)
-        {
-            image.sprite = cloudySprite;
-            PlayerControllerManager.controllerManager.round.weatherNum = rnd;
-        }
-        //‰J
-        if (rnd == 3)
-        {
-            image.sprite = rainySprite;
-            PlayerControllerManager.controllerManager.round.weatherNum = rnd;
+            //°‚ê
+            if (rnd == 1)
+            {
+                image.sprite = sunnySprite;
+                PlayerControllerManager.controllerManager.round.weatherNum = rnd;
+            }
+            //“Ü‚è
+            if (rnd == 2)
+            {
+                image.sprite = cloudySprite;
+                PlayerControllerManager.controllerManager.round.weatherNum = rnd;
+            }
+            //‰J
+            if (rnd == 3)
+            {
+                image.sprite = rainySprite;
+                PlayerControllerManager.controllerManager.round.weatherNum = rnd;
+            }
         }
     }
 }

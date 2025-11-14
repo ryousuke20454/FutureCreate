@@ -45,6 +45,7 @@ public class GameFadeOut : MonoBehaviour
         }
 
         // 開き終わったあと、不要なら非表示にしてもOK
+        gameObject.transform.parent.GetComponent<FadeEventManager>().isFading = false;
         fusumaLeft.gameObject.SetActive(false);
         fusumaRight.gameObject.SetActive(false);
     }

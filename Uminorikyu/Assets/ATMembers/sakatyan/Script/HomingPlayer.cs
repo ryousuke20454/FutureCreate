@@ -19,7 +19,6 @@ public class Vortex : MonoBehaviour
     [SerializeField] private float speed = 2f;
 
     [Header("サイズ設定")]
-    [SerializeField] private float growAmount = 0.05f;
     [SerializeField] private float maxScale = 1f;
     [SerializeField] private float growSpeed = 3f;
 
@@ -99,7 +98,11 @@ public class Vortex : MonoBehaviour
         if (targetToFollow != null)
         {
             // 追従を完全固定に変更
-            transform.position = targetToFollow.position;
+            transform.position = new Vector3(
+                targetToFollow.position.x,
+                targetToFollow.position.y,
+                0.0f);
+            
         }
     }
 
@@ -116,6 +119,8 @@ public class Vortex : MonoBehaviour
         {
             float vortexScale = transform.localScale.x;
             float trashScale = collision.transform.localScale.x;
+
+            float growAmount = collision.gameObject.GetComponent<TrashStatus>().glowAmount;
 
             if (vortexScale >= trashScale)
             {

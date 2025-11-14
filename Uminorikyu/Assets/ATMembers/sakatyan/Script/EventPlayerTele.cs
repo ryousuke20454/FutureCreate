@@ -35,6 +35,9 @@ public class EventPlayerTele : MonoBehaviour
     [Header("フェード速度")]
     [SerializeField] private float vortexFadeDuration = 0.8f;  // 渦フェード時間
 
+    [Header("水しぶきエフェクト")]
+    [SerializeField] private GameObject particle;  // 渦フェード時間
+
     private Collider2D teleCollider;
     private static bool isAnyWarping = false; // 同時発動防止フラグ
 
@@ -140,6 +143,9 @@ public class EventPlayerTele : MonoBehaviour
             player.localScale = Vector3.Lerp(targetScaleVec, originalScale, t);
             yield return null;
         }
+
+        if(particle != null)
+        Instantiate(particle,player.localPosition,Quaternion.identity);
 
         // === 6. 移動スクリプト再有効化 ===
         if (moveScript != null)

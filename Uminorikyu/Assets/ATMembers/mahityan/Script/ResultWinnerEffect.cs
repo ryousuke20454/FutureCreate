@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using KanKikuchi.AudioManager;
 
 public class ResultWinnerEffect : MonoBehaviour
 {
@@ -9,15 +10,28 @@ public class ResultWinnerEffect : MonoBehaviour
     [SerializeField] private RectTransform player2Image;
     [SerializeField] private TMP_Text winText;
     [SerializeField] private ParticleSystem winParticlePrefab; // ← 勝利パーティクルプレハブ
+    [SerializeField] private GameObject fade;
 
     private int player1Score;
     private int player2Score;
+    private bool use;
 
     void Start()
     {
         player1Score = PlayerControllerManager.controllerManager.player[0].score;
         player2Score = PlayerControllerManager.controllerManager.player[1].score;
-        StartCoroutine(ShowResult());
+    }
+
+    private void Update()
+    {
+        if(!fade.GetComponent<FadeEventManager>().isFading)
+        {
+            if (!use)
+            {
+                use = true;
+                StartCoroutine(ShowResult());
+            }
+        }
     }
 
     IEnumerator ShowResult()
@@ -56,6 +70,9 @@ public class ResultWinnerEffect : MonoBehaviour
         float duration = 1.2f;
         float time = 0f;
 
+        SEManager.Instance.Stop();
+        SEManager.Instance.Play(SEPath.JAN);
+
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -66,6 +83,8 @@ public class ResultWinnerEffect : MonoBehaviour
 
             yield return null;
         }
+
+        SEManager.Instance.Play(SEPath.DONPAF);
 
         // 少し待ってからWINテキスト表示
         yield return new WaitForSeconds(0.5f);

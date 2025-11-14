@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using KanKikuchi.AudioManager;
 
 /// <summary>
 /// プレイヤーを追従し、
@@ -132,6 +133,7 @@ public class Vortex : MonoBehaviour
 
                 PlayerControllerManager.controllerManager.SetScore(playerNum, collision.gameObject.GetComponent<TrashStatus>().score);
 
+                SEManager.Instance.Play(SEPath.PON);
                 Destroy(collision.gameObject);
                 float newScale = Mathf.Min(targetScale.x + growAmount, maxScale);
                 targetScale = new Vector3(newScale, newScale, 1f);
@@ -150,6 +152,8 @@ public class Vortex : MonoBehaviour
         Vector2 dir = (transform.position - otherVortex.transform.position).normalized;
         if (dir.sqrMagnitude < 0.01f)
             dir = Random.insideUnitCircle.normalized;
+
+        SEManager.Instance.Play(SEPath.ZABAN);
 
         //自分と相手の大きさを比較→誤差判定以下だったら一緒に吹き飛ぶ
         if (Mathf.Abs(myScale - otherScale) < scaleTolerance)

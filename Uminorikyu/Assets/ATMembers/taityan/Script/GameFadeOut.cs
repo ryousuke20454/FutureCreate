@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using KanKikuchi.AudioManager;
 
 public class GameFadeOut : MonoBehaviour
 {
@@ -45,6 +46,32 @@ public class GameFadeOut : MonoBehaviour
         }
 
         // 開き終わったあと、不要なら非表示にしてもOK
+
+        Round num = PlayerControllerManager.controllerManager.round.roundNum;
+
+        switch (num)
+        {
+            case Round.Title:
+                BGMManager.Instance.Play(BGMPath.TITLE_BGM);
+                break;
+            case Round.Round1:
+                BGMManager.Instance.Play(BGMPath.SEA, 0.5f, 0, 1, true, true);
+                BGMManager.Instance.Play(BGMPath.GAME_BGM, 0.5f, 0, 1, true, true);
+                break;
+            case Round.Round2:
+                BGMManager.Instance.Play(BGMPath.SEA, 0.5f, 0, 1, true, true);
+                BGMManager.Instance.Play(BGMPath.GAME_BGM, 0.5f, 0, 1, true, true);
+                break;
+            case Round.Round3:
+                BGMManager.Instance.Play(BGMPath.SEA, 0.5f, 0, 1, true, true);
+                BGMManager.Instance.Play(BGMPath.GAME_BGM, 0.5f, 0, 1, true, true);
+                break;
+            case Round.Result:
+                BGMManager.Instance.Play(BGMPath.RESULT_BGM);
+                break;
+        }
+        
+
         gameObject.transform.parent.GetComponent<FadeEventManager>().isFading = false;
         fusumaLeft.gameObject.SetActive(false);
         fusumaRight.gameObject.SetActive(false);

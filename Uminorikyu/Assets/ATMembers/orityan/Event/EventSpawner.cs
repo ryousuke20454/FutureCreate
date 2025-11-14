@@ -13,6 +13,7 @@ public class EventSpawner : MonoBehaviour
         public bool appearance;
     }
 
+    [SerializeField] int eventMax;
     //インスペクターでイベントの種類ごとに設定する
     [SerializeField] EventState[] eventStates;
 
@@ -40,7 +41,7 @@ public class EventSpawner : MonoBehaviour
 
                 for (int i = 0; i < eventStates.Length; i++)
                 {
-                    if (eventCount == 2)
+                    if (eventCount == eventMax)
                         break;
 
                     if (Random.Range(1, 100) < eventStates[i].percent && !eventStates[i].appearance)

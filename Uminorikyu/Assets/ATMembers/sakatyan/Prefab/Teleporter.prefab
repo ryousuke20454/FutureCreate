@@ -111,9 +111,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  objectsToWarp: []
-  triggerRadius: 0.5
-  warpCooldown: 1
+  margin: 0.5
+  mainCamera: {fileID: 0}
+  teleportCooldown: 1.5
+  enlargeDuration: 1
+  targetScale: 1.5
+  vortexReappearDelay: 0.5
+  vortexFadeDuration: 0.8
+  particle: {fileID: 5539892110908614264, guid: be05645cd377f3643a1d63f14ef064f7, type: 3}
 --- !u!212 &6840877342258226832
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -158,12 +163,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 3793532547340489435, guid: 6c19dd5e5ed28314ebcd0e13dd6b0f89, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 0.93, y: 0.918}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

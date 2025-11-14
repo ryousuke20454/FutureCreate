@@ -2,6 +2,7 @@
 using TMPro;
 using System.Collections;
 using System.Text;
+using KanKikuchi.AudioManager;
 
 public class ScoreRoulette : MonoBehaviour
 {
@@ -10,23 +11,39 @@ public class ScoreRoulette : MonoBehaviour
     [SerializeField] float spinSpeed = 0.03f;       // 数字が回るスピード
     [SerializeField] float minSpinTime = 0.5f;      // 最短回転時間
     [SerializeField] float maxSpinTime = 1.2f;      // 最長回転時間
+    [SerializeField] GameObject fade;               // フェード取得
 
     private TMP_Text scoreText;
     private int finalScore;
     private string finalScoreString;
+    private bool use; //フラグ
 
     void Start()
     {
+        use = false;
         scoreText = GetComponent<TMP_Text>();
         finalScore = PlayerControllerManager.controllerManager.player[playerNum].score;
         finalScoreString = finalScore.ToString();
-        StartCoroutine(RouletteDigits());
+    }
+
+    private void Update()
+    {
+        if (!fade.GetComponent<FadeEventManager>().isFading)
+        {
+            if (!use)
+            {
+                use = true;
+                StartCoroutine(RouletteDigits());
+            }
+        }
     }
 
     private IEnumerator RouletteDigits()
     {
         int totalDigits = finalScoreString.Length;
         char[] currentDigits = new char[totalDigits];
+
+        SEManager.Instance.Play(SEPath.DORUM);
 
         // 一の位から順に桁を動かしていく
         for (int i = 0; i < totalDigits; i++)

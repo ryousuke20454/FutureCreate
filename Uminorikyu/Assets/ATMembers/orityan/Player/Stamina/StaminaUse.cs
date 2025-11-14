@@ -1,3 +1,4 @@
+using KanKikuchi.AudioManager;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -51,6 +52,7 @@ public class StaminaUse : MonoBehaviour
                 {
                     particle.Play();
                 }
+                SEManager.Instance.Play(SEPath.EXPLOSION);
                 GetComponent<StaminaState>().player.GetComponent<OriiPlayerMove>().barnOut = true;
             }
         }

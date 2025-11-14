@@ -6,8 +6,7 @@ using UnityEngine.UI;
 public class RoundTimer : MonoBehaviour
 {
     [SerializeField] float[] timeLimits = new float[3];
-    [SerializeField] SceneAsset[] scenes = new SceneAsset[3];
-
+    [SerializeField] string[] scenes = new string[3];
     Text text;
 
     float timeLimit;
@@ -49,16 +48,16 @@ public class RoundTimer : MonoBehaviour
             if (PlayerControllerManager.controllerManager.round.roundNum == 1)
             {
                 PlayerControllerManager.controllerManager.round.roundNum = 2;
-                SceneManager.LoadScene(scenes[0].name);
+                SceneManager.LoadScene(scenes[0]);
             }
             else if (PlayerControllerManager.controllerManager.round.roundNum == 2)
             {
                 PlayerControllerManager.controllerManager.round.roundNum = 3;
-                SceneManager.LoadScene(scenes[1].name);
+                SceneManager.LoadScene(scenes[1]);
             }
             else if (PlayerControllerManager.controllerManager.round.roundNum == 3)
             {
-                SceneManager.LoadScene(scenes[2].name);
+                SceneManager.LoadScene(scenes[2]);
             }
         }
     }

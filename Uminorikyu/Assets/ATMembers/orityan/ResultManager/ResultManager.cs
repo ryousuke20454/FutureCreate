@@ -17,6 +17,7 @@ public class ResultManager : MonoBehaviour
     {
         if (PlayerControllerManager.controllerManager.player[0].gamepad.buttonSouth.IsPressed())
         {
+            PlayerControllerManager.controllerManager.RestartGame();
             SceneManager.LoadScene(scene);
         }
     }

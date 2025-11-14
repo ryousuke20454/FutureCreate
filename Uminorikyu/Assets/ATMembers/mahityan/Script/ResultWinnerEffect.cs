@@ -12,7 +12,7 @@ public class ResultWinnerEffect : MonoBehaviour
 
     private int player1Score;
     private int player2Score;
-    
+
     void Start()
     {
         player1Score = PlayerControllerManager.controllerManager.player[0].score;
@@ -24,9 +24,30 @@ public class ResultWinnerEffect : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
 
-        RectTransform winner = (player1Score >= player2Score) ? player1Image : player2Image;
-        string winnerName = (player1Score >= player2Score) ? "P1 WIN!" : "P2 WIN!";
+        // ★ ここで結果を分岐 ★
+        bool isDraw = (player1Score == player2Score);
+        RectTransform winner = null;
+        string winnerName = "";
 
+        if (isDraw)
+        {
+            winnerName = "DRAW!";
+        }
+        else
+        {
+            winner = (player1Score > player2Score) ? player1Image : player2Image;
+            winnerName = (player1Score > player2Score) ? "P1 WIN!" : "P2 WIN!";
+        }
+
+        // ★ 引き分けなら演出なしでテキストだけ出す ★
+        if (isDraw)
+        {
+            winText.text = winnerName;
+            winText.gameObject.SetActive(true);
+            yield break;
+        }
+
+        // ★勝者の拡大＆中央移動★
         Vector3 startPos = winner.anchoredPosition;
         Vector3 targetPos = Vector3.zero;
         Vector3 startScale = winner.localScale;
@@ -46,21 +67,18 @@ public class ResultWinnerEffect : MonoBehaviour
             yield return null;
         }
 
-        
         // 少し待ってからWINテキスト表示
         yield return new WaitForSeconds(0.5f);
 
+        // ★ パーティクル表示 ★
         if (winParticlePrefab != null)
         {
-            // Canvasの位置をワールド座標に変換してパーティクルを出す
             Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(null, winner.position);
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 10f)); // z=10 はカメラ距離
+            Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 10f));
 
             ParticleSystem ps = Instantiate(winParticlePrefab, worldPos, Quaternion.identity);
             ps.Play();
         }
-
-
 
         winText.text = winnerName;
         winText.gameObject.SetActive(true);

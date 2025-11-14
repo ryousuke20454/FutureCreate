@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XInput;
 using UnityEngine.UI;
 
 public class StaminaHeal : MonoBehaviour
@@ -23,6 +24,13 @@ public class StaminaHeal : MonoBehaviour
         //ゲームパッドの取得
         input = GetComponent<PlayerInputScript>();
         gamepad = input.controller;
+        if (gamepad != null)
+        {
+            if (gamepad.name == "XInputControllerWindows")
+            {
+                healSpeed *= 2.5f;
+            }
+        }
     }
 
     // Update is called once per frame

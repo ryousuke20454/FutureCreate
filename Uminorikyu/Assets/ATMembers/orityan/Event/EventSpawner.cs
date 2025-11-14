@@ -43,7 +43,7 @@ public class EventSpawner : MonoBehaviour
                     if (eventCount == 2)
                         break;
 
-                    if (Random.Range(1, 100) < eventStates[i].percent)
+                    if (Random.Range(1, 100) < eventStates[i].percent && !eventStates[i].appearance)
                     {
                         eventStates[i].appearance = true;
                         eventStates[i].target = Instantiate(eventStates[i].events);

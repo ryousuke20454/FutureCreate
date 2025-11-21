@@ -112,6 +112,12 @@ public class Vortex : MonoBehaviour
     // =====================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // ƒvƒŒƒCƒ„[‚ª burnOut ’†‚È‚çÕ“Ë–³Œø‰»
+        if (playerController != null && playerController.barnOut)
+        {
+            return;
+        }
+
         // ©•ª‚ª‚«”ò‚Ñ’†‚È‚ç–³‹
         if (isKnockback) return;
 

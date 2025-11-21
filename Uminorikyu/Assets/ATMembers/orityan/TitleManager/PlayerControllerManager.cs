@@ -45,9 +45,9 @@ public class PlayerControllerManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        player[0].score = 0;
-        player[1].score = 0;
-        round.roundNum = Round.Round1;
+        player[0].score = 10000;
+        player[1].score = 1000;
+        round.roundNum = Round.Title;
         round.weatherNum = 1;
     }
 

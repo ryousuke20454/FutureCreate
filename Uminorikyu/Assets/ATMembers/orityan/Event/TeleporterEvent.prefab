@@ -119,6 +119,7 @@ MonoBehaviour:
   targetScale: 1.5
   vortexReappearDelay: 0.5
   vortexFadeDuration: 0.8
+  particle: {fileID: 0}
 --- !u!212 &789163463008608747
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -163,7 +164,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 3793532547340489435, guid: 6c19dd5e5ed28314ebcd0e13dd6b0f89, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -186,3 +187,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eddb11674df4fa54dbf4c4f60d361ec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 200

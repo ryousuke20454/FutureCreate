@@ -139,4 +139,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   size: 1
   score: 100
-  glowAmount: 0
+  glowAmount: 0.5

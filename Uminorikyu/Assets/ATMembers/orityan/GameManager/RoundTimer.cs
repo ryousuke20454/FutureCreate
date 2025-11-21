@@ -1,3 +1,4 @@
+using KanKikuchi.AudioManager;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,7 +14,9 @@ public class RoundTimer : MonoBehaviour
     float elapsedTime;
     public int nowTime;
 
-    bool limit;
+    bool limit = false;
+    bool soundUse1 = false;
+    bool soundUse2 = false;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,12 +44,34 @@ public class RoundTimer : MonoBehaviour
         elapsedTime += Time.deltaTime;
         nowTime = Mathf.FloorToInt(timeLimit - elapsedTime);
 
+
+        if (nowTime == 10)
+        {
+            if (!soundUse1)
+            {
+                soundUse1 = true;
+                SEManager.Instance.Play(SEPath.TIMER, 1, 0, 1, true, null);
+            }
+        }
+        else if (nowTime == 5)
+        {
+            if (!soundUse2)
+            {
+                soundUse2 = true;
+                SEManager.Instance.Stop();
+                SEManager.Instance.Play(SEPath.FAST_TIMER, 1, 0, 1, true, null);
+            }
+        }
+
         if (nowTime <= 0)
         {
             nowTime = 0;
 
             if (!limit)
             {
+                SEManager.Instance.Stop();
+                SEManager.Instance.Play(SEPath.HOISSURU);
+
                 if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round1)
                 {
                     PlayerControllerManager.controllerManager.round.roundNum = Round.Round2;

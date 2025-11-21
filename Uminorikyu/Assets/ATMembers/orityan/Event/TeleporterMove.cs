@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TeleporterMove : MonoBehaviour
 {
-
+    [SerializeField] float rotationSpeed;
     Vector3 velocity;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -14,6 +14,7 @@ public class TeleporterMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
         transform.position += velocity;
 
         if (transform.position.x > 15.0f)

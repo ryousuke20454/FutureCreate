@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
+using KanKikuchi.AudioManager;
 
 public class TitleFadeIn : MonoBehaviour
 {
@@ -48,6 +48,8 @@ public class TitleFadeIn : MonoBehaviour
 
         // •Â‚Ü‚è‚«‚Á‚Ä‚©‚ç1•b‘Ò‚Â
         yield return new WaitForSeconds(1f);
+
+        BGMManager.Instance.Stop();
 
         if (PlayerControllerManager.controllerManager != null)
         {

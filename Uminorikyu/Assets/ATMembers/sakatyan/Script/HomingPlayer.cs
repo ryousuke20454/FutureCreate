@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using KanKikuchi.AudioManager;
 
 /// <summary>
 /// プレイヤーを追従し、
@@ -19,7 +20,6 @@ public class Vortex : MonoBehaviour
     [SerializeField] private float speed = 2f;
 
     [Header("サイズ設定")]
-    [SerializeField] private float growAmount = 0.05f;
     [SerializeField] private float maxScale = 1f;
     [SerializeField] private float growSpeed = 3f;
 
@@ -99,7 +99,11 @@ public class Vortex : MonoBehaviour
         if (targetToFollow != null)
         {
             // 追従を完全固定に変更
-            transform.position = targetToFollow.position;
+            transform.position = new Vector3(
+                targetToFollow.position.x,
+                targetToFollow.position.y,
+                0.0f);
+            
         }
     }
 
@@ -117,6 +121,8 @@ public class Vortex : MonoBehaviour
             float vortexScale = transform.localScale.x;
             float trashScale = collision.transform.localScale.x;
 
+            float growAmount = collision.gameObject.GetComponent<TrashStatus>().glowAmount;
+
             if (vortexScale >= trashScale)
             {
                 if (worldSpaceCanvas != null)
@@ -127,6 +133,7 @@ public class Vortex : MonoBehaviour
 
                 PlayerControllerManager.controllerManager.SetScore(playerNum, collision.gameObject.GetComponent<TrashStatus>().score);
 
+                SEManager.Instance.Play(SEPath.PON);
                 Destroy(collision.gameObject);
                 float newScale = Mathf.Min(targetScale.x + growAmount, maxScale);
                 targetScale = new Vector3(newScale, newScale, 1f);
@@ -145,6 +152,8 @@ public class Vortex : MonoBehaviour
         Vector2 dir = (transform.position - otherVortex.transform.position).normalized;
         if (dir.sqrMagnitude < 0.01f)
             dir = Random.insideUnitCircle.normalized;
+
+        SEManager.Instance.Play(SEPath.ZABAN);
 
         //自分と相手の大きさを比較→誤差判定以下だったら一緒に吹き飛ぶ
         if (Mathf.Abs(myScale - otherScale) < scaleTolerance)

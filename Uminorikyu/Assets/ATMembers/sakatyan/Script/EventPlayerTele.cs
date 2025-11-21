@@ -35,6 +35,9 @@ public class EventPlayerTele : MonoBehaviour
     [Header("フェード速度")]
     [SerializeField] private float vortexFadeDuration = 0.8f;  // 渦フェード時間
 
+    [Header("パーティクル設定")]
+    [SerializeField] private GameObject warpEffectPrefab;
+
     private Collider2D teleCollider;
     private static bool isAnyWarping = false; // 同時発動防止フラグ
 
@@ -132,6 +135,9 @@ public class EventPlayerTele : MonoBehaviour
             SetVortexColliderEnabled(targetVortex, true); // ← フェードイン完了後に当たり判定ON
         }
 
+        //水しぶき生成
+        SpawnWarpEffect(player.position);
+
         // === 5. プレイヤーを元のサイズに戻す ===
         t = 0f;
         while (t < 1f)
@@ -224,4 +230,18 @@ public class EventPlayerTele : MonoBehaviour
             col.enabled = enabled;
         }
     }
+
+    //パーティクル生成
+    private void SpawnWarpEffect(Vector3 position)
+    {
+        if (warpEffectPrefab == null) return;
+        Vector3 spawnPos = position;
+        spawnPos.z = 0f;
+
+        // 生成
+        Instantiate(warpEffectPrefab, position, Quaternion.identity);
+    }
+
 }
+
+

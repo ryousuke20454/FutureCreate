@@ -9,7 +9,8 @@ public class ResultWinnerEffect : MonoBehaviour
     [SerializeField] private RectTransform player1Image;
     [SerializeField] private RectTransform player2Image;
     [SerializeField] private TMP_Text winText;
-    [SerializeField] private ParticleSystem winParticlePrefab; // ← 勝利パーティクルプレハブ
+    [SerializeField] private TMP_Text pressXText;   // ← 追加（「×を押してタイトルへ」）
+    [SerializeField] private ParticleSystem winParticlePrefab;
     [SerializeField] private GameObject fade;
 
     private int player1Score;
@@ -20,11 +21,14 @@ public class ResultWinnerEffect : MonoBehaviour
     {
         player1Score = PlayerControllerManager.controllerManager.player[0].score;
         player2Score = PlayerControllerManager.controllerManager.player[1].score;
+
+        if (pressXText != null)
+            pressXText.gameObject.SetActive(false); // 最初は非表示
     }
 
     private void Update()
     {
-        if(!fade.GetComponent<FadeEventManager>().isFading)
+        if (!fade.GetComponent<FadeEventManager>().isFading)
         {
             if (!use)
             {
@@ -38,7 +42,6 @@ public class ResultWinnerEffect : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
 
-        // ★ ここで結果を分岐 ★
         bool isDraw = (player1Score == player2Score);
         RectTransform winner = null;
         string winnerName = "";
@@ -53,15 +56,17 @@ public class ResultWinnerEffect : MonoBehaviour
             winnerName = (player1Score > player2Score) ? "P1 WIN!" : "P2 WIN!";
         }
 
-        // ★ 引き分けなら演出なしでテキストだけ出す ★
         if (isDraw)
         {
             winText.text = winnerName;
             winText.gameObject.SetActive(true);
+
+            // ★ DRAW時も “× を押して…” を点滅開始
+            StartCoroutine(BlinkToTitleText());
             yield break;
         }
 
-        // ★勝者の拡大＆中央移動★
+        // 勝者移動＆拡大
         Vector3 startPos = winner.anchoredPosition;
         Vector3 targetPos = Vector3.zero;
         Vector3 startScale = winner.localScale;
@@ -70,8 +75,7 @@ public class ResultWinnerEffect : MonoBehaviour
         float duration = 1.2f;
         float time = 0f;
 
-        SEManager.Instance.Stop();
-        SEManager.Instance.Play(SEPath.JAN);
+        
 
         while (time < duration)
         {
@@ -86,10 +90,9 @@ public class ResultWinnerEffect : MonoBehaviour
 
         SEManager.Instance.Play(SEPath.DONPAF);
 
-        // 少し待ってからWINテキスト表示
         yield return new WaitForSeconds(0.5f);
 
-        // ★ パーティクル表示 ★
+        // パーティクル
         if (winParticlePrefab != null)
         {
             Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(null, winner.position);
@@ -101,5 +104,27 @@ public class ResultWinnerEffect : MonoBehaviour
 
         winText.text = winnerName;
         winText.gameObject.SetActive(true);
+
+        // ★ 最後に “× を押してタイトルへ” を点滅表示
+        StartCoroutine(BlinkToTitleText());
+    }
+
+    // --------------------------------------------------------------
+    // ▼ テキストを点滅（永続）
+    // --------------------------------------------------------------
+    IEnumerator BlinkToTitleText()
+    {
+        if (pressXText == null) yield break;
+
+        pressXText.gameObject.SetActive(true);
+
+        while (true)
+        {
+            pressXText.alpha = 1f;
+            yield return new WaitForSeconds(0.6f);
+
+            pressXText.alpha = 0f;
+            yield return new WaitForSeconds(0.6f);
+        }
     }
 }

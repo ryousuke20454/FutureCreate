@@ -13,6 +13,9 @@ public class ResultWinnerEffect : MonoBehaviour
     [SerializeField] private ParticleSystem winParticlePrefab;
     [SerializeField] private GameObject fade;
 
+    [SerializeField] private float shakeAmplitude = 25f; // 揺れる幅
+    [SerializeField] private float shakeSpeed = 2f;      // 揺れる速さ
+
     private int player1Score;
     private int player2Score;
     private bool use;
@@ -90,6 +93,8 @@ public class ResultWinnerEffect : MonoBehaviour
 
         SEManager.Instance.Play(SEPath.DONPAF);
 
+        StartCoroutine(ShakeWinner(winner));
+
         yield return new WaitForSeconds(0.5f);
 
         // パーティクル
@@ -125,6 +130,21 @@ public class ResultWinnerEffect : MonoBehaviour
 
             pressXText.alpha = 0f;
             yield return new WaitForSeconds(0.6f);
+        }
+    }
+
+    // --------------------------------------------------------------
+    // ▼ 勝者画像を上下に揺らす
+    // --------------------------------------------------------------
+    IEnumerator ShakeWinner(RectTransform target)
+    {
+        Vector3 basePos = target.anchoredPosition;
+
+        while (true)
+        {
+            float y = Mathf.Sin(Time.time * shakeSpeed) * shakeAmplitude;
+            target.anchoredPosition = basePos + new Vector3(0, y, 0);
+            yield return null;
         }
     }
 }

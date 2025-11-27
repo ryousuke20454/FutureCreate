@@ -1470,6 +1470,8 @@ MonoBehaviour:
   pressXText: {fileID: 1163886656}
   winParticlePrefab: {fileID: 7833378280507409750, guid: 2d7b96c9f1e3b07499f0608547a54f82, type: 3}
   fade: {fileID: 68309905}
+  shakeAmplitude: 25
+  shakeSpeed: 5
 --- !u!1001 &435507410695741618
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -27,23 +27,21 @@ public class Vortex : MonoBehaviour
     [SerializeField] private float rotationSpeed = 180f;
 
     [Header("吹き飛び設定")]
-    [SerializeField] private float bounceDistance = 1.5f;   // 吹き飛び距離
-    [SerializeField] private float bounceDuration = 0.6f;   // 吹き飛び時間
-    [SerializeField] private float stopDuration = 0.5f;     // 停止時間
-    [SerializeField] private float scaleTolerance = 0.02f;  // 同サイズ誤差
-    [SerializeField] private float blinkInterval = 0.15f;   // 点滅間隔
+    [SerializeField] private float bounceDistance = 1.5f;
+    [SerializeField] private float bounceDuration = 0.6f;
+    [SerializeField] private float stopDuration = 0.5f;
+    [SerializeField] private float scaleTolerance = 0.02f;
+    [SerializeField] private float blinkInterval = 0.15f;
 
+    [Header("バーンアウト吹き飛び倍率")]
+    [SerializeField] private float barnOutbounce = 1.5f;
 
     [Header("スコアポップアップ設定")]
-    [SerializeField, Tooltip("スコアポップアップ用プレハブ(Resources内)")]
-    private GameObject floatingScorePrefab;
-    [SerializeField, Tooltip("World Space Canvas（UI表示先）")]
-    private Canvas worldSpaceCanvas;
+    [SerializeField] private GameObject floatingScorePrefab;
+    [SerializeField] private Canvas worldSpaceCanvas;
 
     [Header("プレイヤー番号設定")]
     [SerializeField] private int playerNum = 0;
-
-
 
     // =====================================================
     // 内部変数
@@ -55,7 +53,6 @@ public class Vortex : MonoBehaviour
     private Vector3 baseScale;
     private Vector3 targetScale;
 
-    // プレイヤー関連
     private Rigidbody2D playerRb;
     private OriiPlayerMove playerController;
     private SpriteRenderer playerRenderer;
@@ -94,16 +91,12 @@ public class Vortex : MonoBehaviour
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * growSpeed);
 
-        //if (isKnockback) return;
-
         if (targetToFollow != null)
         {
-            // 追従を完全固定に変更
             transform.position = new Vector3(
                 targetToFollow.position.x,
                 targetToFollow.position.y,
                 0.0f);
-            
         }
     }
 
@@ -112,18 +105,14 @@ public class Vortex : MonoBehaviour
     // =====================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // プレイヤーが burnOut 中なら衝突無効化
-        if (playerController != null && playerController.barnOut)
-        {
-            return;
-        }
-
-        // 自分が吹き飛び中なら無視
         if (isKnockback) return;
 
         // ---- ゴミとの接触 ----
         if (collision.CompareTag("Trash"))
         {
+            if (playerController != null && playerController.barnOut)
+                return;
+
             float vortexScale = transform.localScale.x;
             float trashScale = collision.transform.localScale.x;
 
@@ -133,14 +122,18 @@ public class Vortex : MonoBehaviour
             {
                 if (worldSpaceCanvas != null)
                 {
-                    ShowFloatingText(collision.gameObject.transform.position,
-                        collision.gameObject.GetComponent<TrashStatus>().score);
+                    ShowFloatingText(
+                        collision.transform.position,
+                        collision.GetComponent<TrashStatus>().score);
                 }
 
-                PlayerControllerManager.controllerManager.SetScore(playerNum, collision.gameObject.GetComponent<TrashStatus>().score);
+                PlayerControllerManager.controllerManager.SetScore(
+                    playerNum,
+                    collision.GetComponent<TrashStatus>().score);
 
                 SEManager.Instance.Play(SEPath.PON);
                 Destroy(collision.gameObject);
+
                 float newScale = Mathf.Min(targetScale.x + growAmount, maxScale);
                 targetScale = new Vector3(newScale, newScale, 1f);
             }
@@ -155,29 +148,53 @@ public class Vortex : MonoBehaviour
         float myScale = transform.localScale.x;
         float otherScale = otherVortex.transform.localScale.x;
 
+        bool amIBurnOut = playerController != null && playerController.barnOut;
+        bool isOtherBurnOut = otherVortex.playerController != null && otherVortex.playerController.barnOut;
+
         Vector2 dir = (transform.position - otherVortex.transform.position).normalized;
         if (dir.sqrMagnitude < 0.01f)
             dir = Random.insideUnitCircle.normalized;
 
         SEManager.Instance.Play(SEPath.ZABAN);
+        camera?.ShakeCamera();
 
-        //自分と相手の大きさを比較→誤差判定以下だったら一緒に吹き飛ぶ
+        // =====================================================
+        // バーンアウト優先判定
+        // =====================================================
+
+        // 片方だけバーンアウト → バーンアウト側だけ吹き飛ぶ
+        if (amIBurnOut && !isOtherBurnOut)
+        {
+            StartCoroutine(KnockbackWithPlayer(dir, barnOutbounce));
+            return;
+        }
+        if (!amIBurnOut && isOtherBurnOut)
+        {
+            otherVortex.StartCoroutine(otherVortex.KnockbackWithPlayer(-dir, otherVortex.barnOutbounce));
+            return;
+        }
+
+        // =====================================================
+        // 同サイズ判定（バーンアウトなしの場合のみ）
+        // =====================================================
         if (Mathf.Abs(myScale - otherScale) < scaleTolerance)
         {
-            camera?.ShakeCamera();
+            // どちらもバーンアウトでない → 両方吹き飛ぶ
             StartCoroutine(KnockbackWithPlayer(dir));
             otherVortex.StartCoroutine(otherVortex.KnockbackWithPlayer(-dir));
+            return;
         }
 
-        else if (myScale > otherScale)
+
+        // =====================================================
+        // サイズ差による勝敗
+        // =====================================================
+        if (myScale > otherScale)
         {
-            camera?.ShakeCamera();
             otherVortex.StartCoroutine(otherVortex.KnockbackWithPlayer(-dir));
         }
-
         else
         {
-            camera?.ShakeCamera();
             StartCoroutine(KnockbackWithPlayer(dir));
         }
     }
@@ -185,32 +202,35 @@ public class Vortex : MonoBehaviour
     // =====================================================
     // 吹き飛ばし処理
     // =====================================================
-    private IEnumerator KnockbackWithPlayer(Vector2 direction)
+    private IEnumerator KnockbackWithPlayer(Vector2 direction, float bounceMultiplier = 1f)
     {
         isKnockback = true;
-        if (col != null) col.enabled = false; // 衝突無効化
+        if (col != null) col.enabled = false;
 
-        // プレイヤー操作停止
         if (playerController != null)
             playerController.enabled = false;
 
-        // プレイヤー点滅開始（既存があれば停止）
         if (playerRenderer != null)
         {
             if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
             blinkCoroutine = StartCoroutine(BlinkPlayer());
         }
 
-        // 初期位置
         Vector3 startPosVortex = transform.position;
-        Vector3 startPosPlayer = targetToFollow != null ? targetToFollow.position : Vector3.zero;
+        Vector3 startPosPlayer = targetToFollow.position;
 
-        // 吹き飛び距離（サイズで軽減されすぎないよう補正）
         float scaleFactor = Mathf.Clamp(transform.localScale.x, 0.8f, 3f);
-        float power = Mathf.Lerp(bounceDistance, bounceDistance * 0.5f, (scaleFactor - 0.8f) / 2.2f);
+
+        float power = Mathf.Lerp(
+            bounceDistance,
+            bounceDistance * 0.5f,
+            (scaleFactor - 0.8f) / 2.2f);
+
+        // ★ バーンアウト倍率適用
+        power *= bounceMultiplier;
+
         Vector3 targetOffset = (Vector3)(direction.normalized * power);
 
-        // スムーズ補間
         float elapsed = 0f;
         while (elapsed < bounceDuration)
         {
@@ -219,28 +239,23 @@ public class Vortex : MonoBehaviour
 
             Vector3 offset = targetOffset * t;
             transform.position = startPosVortex + offset;
-            if (targetToFollow != null)
-                targetToFollow.position = startPosPlayer + offset;
+            targetToFollow.position = startPosPlayer + offset;
 
             yield return null;
         }
 
         yield return new WaitForSeconds(stopDuration);
 
-        // プレイヤー操作再開
         if (playerController != null)
             playerController.enabled = true;
 
-        // 点滅停止
         if (blinkCoroutine != null)
         {
             StopCoroutine(blinkCoroutine);
             blinkCoroutine = null;
-            if (playerRenderer != null)
-                playerRenderer.enabled = true;
+            playerRenderer.enabled = true;
         }
 
-        // 衝突再有効化
         if (col != null) col.enabled = true;
 
         isKnockback = false;
@@ -264,7 +279,6 @@ public class Vortex : MonoBehaviour
     {
         if (floatingScorePrefab == null) return;
 
-        // World Space Canvas の子として生成
         GameObject popup;
         if (worldSpaceCanvas != null)
         {
@@ -275,19 +289,15 @@ public class Vortex : MonoBehaviour
             popup = Instantiate(floatingScorePrefab, worldPos, Quaternion.identity);
         }
 
-        // テキスト設定
         FloatingScoreText textComp = popup.GetComponent<FloatingScoreText>();
         if (textComp != null)
         {
             textComp.SetText(score.ToString());
         }
 
-        // カメラの方向を向かせる（ビルボード効果）
         if (Camera.main != null)
         {
             popup.transform.forward = Camera.main.transform.forward;
         }
-
-        Debug.Log($"★ FloatingScoreText 生成！ pos={worldPos}, alpha={popup.GetComponentInChildren<TextMeshProUGUI>().color.a}");
     }
 }

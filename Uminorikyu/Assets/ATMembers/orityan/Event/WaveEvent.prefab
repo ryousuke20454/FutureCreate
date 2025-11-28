@@ -53,6 +53,7 @@ MonoBehaviour:
   waveLifeTime: 30
   minSpacingBetweenWaves: 3
   avoidFieldEdgeMargin: 0.5
+  initialAlpha: 0.6
   trashMovementSpeed: 2
   affectTrash: 1
   debugLogs: 0

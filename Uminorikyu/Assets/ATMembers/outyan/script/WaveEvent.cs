@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class WaveEvent : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class WaveEvent : MonoBehaviour
     [SerializeField] private float waveLifeTime = 30f;
     [SerializeField] private float minSpacingBetweenWaves = 3f;
     [SerializeField] private float avoidFieldEdgeMargin = 0.5f;
+    [SerializeField][Range(0f, 1f)] private float initialAlpha = 0.6f; // 初期アルファ値
+
 
     [Header("ゴミへの影響")]
     [SerializeField] private float trashMovementSpeed = 2f; // 新しいパラメータ：ゴミの移動速度（直接指定）
@@ -153,6 +156,8 @@ public class WaveEvent : MonoBehaviour
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             waveObj.transform.rotation = Quaternion.Euler(0, 0, angle - 90);
 
+            SetWaveAlpha(waveObj, initialAlpha);
+
             WaveInstance wave = new WaveInstance
             {
                 waveObject = waveObj,
@@ -201,7 +206,7 @@ public class WaveEvent : MonoBehaviour
 
             float elapsedTime = Time.time - wave.spawnTime;
 
-            float alpha = 1f;
+            float alpha = initialAlpha;
             if (elapsedTime > waveLifeTime - 5f)
             {
                 float fadeProgress = (elapsedTime - (waveLifeTime - 5f)) / 5f;
@@ -227,6 +232,29 @@ public class WaveEvent : MonoBehaviour
                 var emission = ps.emission;
                 emission.enabled = alpha > 0.1f;
             }
+        }
+    }
+
+    private void SetWaveAlpha(GameObject waveObj, float alpha)
+    {
+        var spriteRenderers = waveObj.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var sr in spriteRenderers)
+        {
+            Color col = sr.color;
+            col.a = alpha;
+            sr.color = col;
+        }
+
+        var particleSystems = waveObj.GetComponentsInChildren<ParticleSystem>();
+        foreach (var ps in particleSystems)
+        {
+            var main = ps.main;
+            Color startColor = main.startColor.color;
+            startColor.a = alpha;
+            main.startColor = startColor;
+
+            var emission = ps.emission;
+            emission.enabled = alpha > 0.1f;
         }
     }
 
@@ -334,12 +362,12 @@ public class WaveEvent : MonoBehaviour
         foreach (var wave in activeWaves)
         {
             float elapsedTime = Time.time - wave.spawnTime;
-            float alpha = 1f;
+            float alpha = initialAlpha;
 
             if (elapsedTime > waveLifeTime - 5f)
             {
                 float fadeProgress = (elapsedTime - (waveLifeTime - 5f)) / 5f;
-                alpha = Mathf.Clamp01(1f - fadeProgress);
+                alpha = Mathf.Lerp(initialAlpha, 0f, fadeProgress);
             }
 
             Gizmos.color = new Color(0f, 1f, 1f, alpha);

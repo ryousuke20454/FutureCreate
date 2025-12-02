@@ -13,6 +13,7 @@ public class EventSpawner : MonoBehaviour
         public bool appearance;
     }
 
+    int weather = 1;
     [SerializeField] int eventMax;
     //インスペクターでイベントの種類ごとに設定する
     [SerializeField] EventState[] eventStates;
@@ -25,6 +26,7 @@ public class EventSpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        weather = PlayerControllerManager.controllerManager.round.weatherNum;
         timer = GetComponent<RoundTimer>();
         flag = false;
         eventCount = 0;
@@ -41,7 +43,7 @@ public class EventSpawner : MonoBehaviour
 
                 for (int i = 0; i < eventStates.Length; i++)
                 {
-                    if (eventCount == eventMax)
+                    if (eventCount == eventMax + weather)
                         break;
 
                     if (Random.Range(1, 100) < eventStates[i].percent && !eventStates[i].appearance)

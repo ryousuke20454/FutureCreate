@@ -1067,6 +1067,7 @@ GameObject:
   - component: {fileID: 501940476}
   - component: {fileID: 501940477}
   - component: {fileID: 501940478}
+  - component: {fileID: 501940479}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1134,7 +1135,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -8226791342133850464, guid: 95d98683301241741b7fd087900573d9, type: 3}
+  m_Sprite: {fileID: -8868653072870737037, guid: 786f6a0b85268134db6bede5af7e956d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1200,7 +1201,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &501940478
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1237,6 +1238,28 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!95 &501940479
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501940472}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0685a5a74b1f64b48af9cdb4c899c25e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &508613768 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4211814932138820378, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
@@ -1368,6 +1391,7 @@ GameObject:
   - component: {fileID: 639480467}
   - component: {fileID: 639480466}
   - component: {fileID: 639480465}
+  - component: {fileID: 639480468}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1458,6 +1482,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
+--- !u!114 &639480468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 639480463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ca79b621c0a134b80d79922ec01cd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerImage: {fileID: 468127085}
+  stamina: {fileID: 9193584572224811282}
+  chargeEffect: {fileID: 1190953284}
 --- !u!1 &641727497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1839,6 +1878,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a7c0c9e82b88c488140dbb7c62647c, type: 3}
+--- !u!1 &800580979 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8865190017908454158, guid: f0a7c0c9e82b88c488140dbb7c62647c, type: 3}
+  m_PrefabInstance: {fileID: 800580978}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &892503662
 GameObject:
   m_ObjectHideFlags: 0
@@ -1986,7 +2030,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &892503668
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2377,6 +2421,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0a7c0c9e82b88c488140dbb7c62647c, type: 3}
+--- !u!1 &1190953284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8865190017908454158, guid: f0a7c0c9e82b88c488140dbb7c62647c, type: 3}
+  m_PrefabInstance: {fileID: 1190953283}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1320304877
 GameObject:
   m_ObjectHideFlags: 0
@@ -3013,7 +3062,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[3].percent
-      value: 30
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1394253441827555232, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -3406,6 +3455,7 @@ GameObject:
   - component: {fileID: 2080870058}
   - component: {fileID: 2080870057}
   - component: {fileID: 2080870056}
+  - component: {fileID: 2080870059}
   m_Layer: 5
   m_Name: Canvas (1)
   m_TagString: Untagged
@@ -3496,6 +3546,21 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
+--- !u!114 &2080870059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080870054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ca79b621c0a134b80d79922ec01cd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerImage: {fileID: 1058290466}
+  stamina: {fileID: 797215562382705076}
+  chargeEffect: {fileID: 800580979}
 --- !u!1 &2101832459
 GameObject:
   m_ObjectHideFlags: 0

@@ -26,9 +26,13 @@ public class StaminaHeal : MonoBehaviour
         gamepad = input.controller;
         if (gamepad != null)
         {
-            if (gamepad.name == "XInputControllerWindows")
+            if (input.joystick == "Controller (HORI Fighting Stick mini)")
             {
-                healSpeed *= 2.5f;
+                healSpeed *= 2.0f;
+            }
+            if (input.joystick == "Controller (HORI Fighting Stick mini for PC)")
+            {
+                healSpeed *= 2.0f;
             }
         }
     }
@@ -57,7 +61,6 @@ public class StaminaHeal : MonoBehaviour
                             particle.Stop();
                         }
                         player.GetComponent<OriiPlayerMove>().barnOut = false;
-                        Debug.Log(GetComponent<Slider>().value);
                     }
                     else
                     {

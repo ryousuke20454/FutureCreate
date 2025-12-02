@@ -7,6 +7,7 @@ public class PlayerInputScript : MonoBehaviour
     [SerializeField] public int PlayerNum;
     //コントローター情報
     public Gamepad controller;
+    public string joystick;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -19,6 +20,20 @@ public class PlayerInputScript : MonoBehaviour
         if (controller == null)
         {
             Debug.Log("コントローラーが接続されていません");
+        }
+        else
+        {
+            string[] joysticks = Input.GetJoystickNames();
+            for (int i = 0; i < joysticks.Length; i++)
+            {
+                if (joysticks[i] != "")
+                {
+                    joystick = joysticks[i + PlayerNum] ;
+                    break;
+                }
+            }
+
+            Debug.Log(joystick);
         }
     }
 
@@ -35,10 +50,15 @@ public class PlayerInputScript : MonoBehaviour
                 value = gamepad.leftStick.ReadValue();
             }
             //アケコンだったら
-            else if (gamepad.name == "XInputControllerWindows")
+            else if (joystick == "Controller (HORI Fighting Stick mini)")
             {
                 // 左スティックの入力値を取得
                 value = gamepad.dpad.ReadValue();
+            }
+            else if (joystick == "Controller (HORI Fighting Stick mini for PC)")
+            {
+                // 左スティックの入力値を取得
+                value = gamepad.leftStick.ReadValue();
             }
         }
 

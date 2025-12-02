@@ -98,7 +98,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.1
+  m_Radius: 0.5
 --- !u!114 &6176621088979277817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,7 +119,7 @@ MonoBehaviour:
   targetScale: 1.5
   vortexReappearDelay: 0.5
   vortexFadeDuration: 0.8
-  particle: {fileID: 0}
+  particle: {fileID: 5539892110908614264, guid: be05645cd377f3643a1d63f14ef064f7, type: 3}
 --- !u!212 &789163463008608747
 SpriteRenderer:
   m_ObjectHideFlags: 0

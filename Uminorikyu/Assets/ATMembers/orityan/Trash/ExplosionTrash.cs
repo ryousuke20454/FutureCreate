@@ -12,6 +12,7 @@ public class ExplosionTrash : MonoBehaviour
             collision.gameObject.GetComponent<PlayerAndStaminaInfo>().GetExplosionTrash();
             SEManager.Instance.Play(SEPath.EXPLOSION);
             Instantiate(particle, collision.gameObject.transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
     }
 }

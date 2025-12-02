@@ -6,15 +6,15 @@ public class ChargeEffect : MonoBehaviour
     [SerializeField] GameObject playerImage;
     [SerializeField] GameObject stamina;
     [SerializeField] GameObject chargeEffect;
+    [SerializeField] float effectDuration = 0.3f; // エフェクト表示を保持する時間
 
     private float previousStamina;
+    private float effectTimer = 0f;
 
     void Start()
     {
-        // 初期値を設定
         previousStamina = stamina.GetComponent<Slider>().value;
 
-        // エフェクトを最初は非表示に
         if (chargeEffect != null)
         {
             chargeEffect.SetActive(false);
@@ -29,6 +29,9 @@ public class ChargeEffect : MonoBehaviour
         // スタミナが増えているかチェック
         if (currentStamina > previousStamina)
         {
+            // タイマーをリセット
+            effectTimer = effectDuration;
+
             // エフェクトを表示
             if (chargeEffect != null && !chargeEffect.activeSelf)
             {
@@ -41,16 +44,19 @@ public class ChargeEffect : MonoBehaviour
                 chargeEffect.transform.position = playerImage.transform.position;
             }
         }
-        else
+
+        // タイマーを減らす
+        if (effectTimer > 0)
         {
-            // スタミナが増えていない場合はエフェクトを非表示
-            if (chargeEffect != null && chargeEffect.activeSelf)
+            effectTimer -= Time.fixedDeltaTime;
+
+            // タイマーが0になったらエフェクトを非表示
+            if (effectTimer <= 0 && chargeEffect != null)
             {
                 chargeEffect.SetActive(false);
             }
         }
 
-        // 現在の値を保存
         previousStamina = currentStamina;
     }
 }

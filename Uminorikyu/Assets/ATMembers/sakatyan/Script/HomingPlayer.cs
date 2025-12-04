@@ -78,7 +78,7 @@ public class Vortex : MonoBehaviour
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * growSpeed);
 
-        if (targetToFollow != null && !isKnockback)
+        if (targetToFollow != null/* && !isKnockback*/)
         {
             transform.position = new Vector3(targetToFollow.position.x, targetToFollow.position.y, 0f);
         }

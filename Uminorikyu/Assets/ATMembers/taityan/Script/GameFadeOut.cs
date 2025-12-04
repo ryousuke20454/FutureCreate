@@ -8,11 +8,14 @@ public class GameFadeOut : MonoBehaviour
     [SerializeField] private RectTransform fusumaLeft;
     [SerializeField] private RectTransform fusumaRight;
     [SerializeField] private float slideDuration = 1.0f; // 開く速度
+    [SerializeField] private GameObject text;
 
     private Vector2 leftStartPos;
     private Vector2 rightStartPos;
     private Vector2 leftEndPos;
     private Vector2 rightEndPos;
+
+    private bool start = false;
 
     private void Start()
     {
@@ -23,10 +26,30 @@ public class GameFadeOut : MonoBehaviour
         // 終了位置（左右の外側へ移動）
         leftEndPos = new Vector2(-1920, leftStartPos.y);
         rightEndPos = new Vector2(1920, rightStartPos.y);
-
-        // アニメーション開始
-        StartCoroutine(OpenFusuma());
     }
+
+    private void Update()
+    {
+        if (!start)
+        {
+            if (text != null)
+            {
+                if (text.GetComponent<RoundDisp>().dispEnd)
+                {
+                    // アニメーション開始
+                    StartCoroutine(OpenFusuma());
+                    start = true;
+                }
+            }
+            else
+            {
+                StartCoroutine(OpenFusuma());
+                start = true;
+            }
+        }
+    }
+
+
 
     private IEnumerator OpenFusuma()
     {

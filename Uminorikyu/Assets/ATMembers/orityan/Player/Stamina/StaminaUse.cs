@@ -47,7 +47,7 @@ public class StaminaUse : MonoBehaviour
             }
             else
             {
-                player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
+                player.GetComponent<OriiPlayerMove>().moveSpeed = stickPower;
                 if (particle != null)
                 {
                     particle.Play();
@@ -58,7 +58,7 @@ public class StaminaUse : MonoBehaviour
         }
         else
         {
-            player.GetComponent<OriiPlayerMove>().moveSpeed = 0.2f;
+            player.GetComponent<OriiPlayerMove>().moveSpeed = stickPower;
         }
 
     }

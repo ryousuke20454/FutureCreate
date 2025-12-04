@@ -420,6 +420,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FadeOut
       objectReference: {fileID: 0}
+    - target: {fileID: 1834302481100158646, guid: 667cb28fd5abc124880c96976a0f49fd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2558283902697261076, guid: 667cb28fd5abc124880c96976a0f49fd, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -662,7 +666,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: ecd849c3846e126468f02794bd033ca6, type: 3}
     m_FontSize: 70
     m_FontStyle: 0
     m_BestFit: 0

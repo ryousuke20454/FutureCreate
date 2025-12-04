@@ -15,6 +15,7 @@ public class RoundTimer : MonoBehaviour
     public int nowTime;
 
     bool limit = false;
+    public bool timeUp = false;
     bool soundUse1 = false;
     bool soundUse2 = false;
 
@@ -87,6 +88,7 @@ public class RoundTimer : MonoBehaviour
 
                 Instantiate(fade);
 
+                timeUp = true;
                 limit = true;
             }
         }

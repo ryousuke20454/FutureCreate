@@ -46,6 +46,14 @@ public class EventPlayerTele : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
 
+        //ラウンド用に初期化
+        teleportCooldown = 1.5f; // クールダウン
+        enlargeDuration = 1.0f;  // 拡大時間
+        targetScale = 1.5f;      // 拡大後のスケール倍率
+        vortexReappearDelay = 0.5f; // 渦の再表示までの遅延
+        vortexFadeDuration = 0.8f;  // 渦フェード時間
+        isAnyWarping = false; // 同時発動防止フラグ
+
         teleCollider = GetComponent<Collider2D>();
         teleCollider.isTrigger = true;
     }

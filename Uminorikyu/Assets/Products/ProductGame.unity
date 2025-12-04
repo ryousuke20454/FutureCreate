@@ -342,6 +342,26 @@ PrefabInstance:
       propertyPath: spiral
       value: 
       objectReference: {fileID: 327445680}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2300094099149473640, guid: c2b774f07c56c484b85b4812f417ff4c, type: 3}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4211814932138820378, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
       propertyPath: m_Name
       value: Stamina (1)
@@ -486,6 +506,14 @@ PrefabInstance:
       propertyPath: stickPower
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 7746474726875555959, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7746474726875555959, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1515449492662660457, guid: 7a1d0d9e4db32ca478a48936fe23820f, type: 3}
     - target: {fileID: 9197937425050412391, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
       propertyPath: m_Value
       value: 0
@@ -3072,7 +3100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1834302481100158646, guid: 667cb28fd5abc124880c96976a0f49fd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2558283902697261076, guid: 667cb28fd5abc124880c96976a0f49fd, type: 3}
       propertyPath: m_Pivot.x
@@ -3390,6 +3418,26 @@ PrefabInstance:
       propertyPath: spiral
       value: 
       objectReference: {fileID: 1320304877}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2300094099149473640, guid: c2b774f07c56c484b85b4812f417ff4c, type: 3}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1217761882937405234, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4211814932138820378, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
       propertyPath: m_Name
       value: Stamina
@@ -3534,6 +3582,14 @@ PrefabInstance:
       propertyPath: stickPower
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 7746474726875555959, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7746474726875555959, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1515449492662660457, guid: 7a1d0d9e4db32ca478a48936fe23820f, type: 3}
     - target: {fileID: 9197937425050412391, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
       propertyPath: m_Value
       value: 0
@@ -3932,15 +3988,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.381132, g: 0.36171585, b: 0.36171585, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 950054922970270776, guid: f8a7e37d1cfcd4842ae22a707131989f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4026,8 +4082,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -1515449492662660457, guid: 7a1d0d9e4db32ca478a48936fe23820f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4109,7 +4165,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4224,15 +4280,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.381132, g: 0.36171585, b: 0.36171585, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 950054922970270776, guid: f8a7e37d1cfcd4842ae22a707131989f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -4297,8 +4353,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -1515449492662660457, guid: 7a1d0d9e4db32ca478a48936fe23820f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

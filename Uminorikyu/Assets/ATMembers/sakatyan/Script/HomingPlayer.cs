@@ -37,6 +37,12 @@ public class Vortex : MonoBehaviour
     [Header("プレイヤー番号設定")]
     [SerializeField] private int playerNum = 0;
 
+    [Header("ヒットエフェクト設定")]
+    [SerializeField] private GameObject particle;
+
+    [Header("ゴミ取得時エフェクト設定")]
+    [SerializeField] private GameObject particle2;
+
     private Rigidbody2D rb;
     private Collider2D col;
     private CameraController camera;
@@ -49,6 +55,7 @@ public class Vortex : MonoBehaviour
     private SpriteRenderer playerRenderer;
     private PlayerAndStaminaInfo playerStamina;
     private Coroutine blinkCoroutine;
+    private Color originalColor;
 
     public Transform TargetToFollow => targetToFollow;
 
@@ -60,6 +67,7 @@ public class Vortex : MonoBehaviour
 
         baseScale = transform.localScale;
         targetScale = baseScale;
+        
 
         if (targetToFollow == null)
             targetToFollow = GameObject.FindGameObjectWithTag("Player")?.transform;
@@ -70,6 +78,8 @@ public class Vortex : MonoBehaviour
             playerController = targetToFollow.GetComponent<OriiPlayerMove>();
             playerRenderer = targetToFollow.GetComponent<SpriteRenderer>();
             playerStamina = targetToFollow.GetComponent<PlayerAndStaminaInfo>();
+
+            originalColor = playerRenderer.color;
         }
     }
 
@@ -110,6 +120,15 @@ public class Vortex : MonoBehaviour
                 PlayerControllerManager.controllerManager.SetScore(playerNum, collision.GetComponent<TrashStatus>().score);
 
                 SEManager.Instance.Play(SEPath.PON);
+
+                if (particle2 != null)
+                {
+                    GameObject p = Instantiate(particle2, transform.position, Quaternion.identity);
+
+                    // ゴミの大きさを取得してパーティクルに反映
+                    p.transform.localScale *= trashScale * 0.8f;  // ←倍率は調整可能
+                }
+
                 Destroy(collision.gameObject);
 
                 float newScale = Mathf.Min(targetScale.x + growAmount, maxScale);
@@ -136,6 +155,10 @@ public class Vortex : MonoBehaviour
 
         SEManager.Instance.Play(SEPath.ZABAN);
         camera?.ShakeCamera();
+
+        if (particle != null)
+            Instantiate(particle, otherVortex.transform.position, Quaternion.identity);
+            Instantiate(particle, transform.position, Quaternion.identity);
 
         // --- スタミナダメージ処理 ---
         ApplyStaminaDamage(otherVortex, myScale, otherScale);
@@ -230,6 +253,9 @@ public class Vortex : MonoBehaviour
         {
             StopCoroutine(blinkCoroutine);
             blinkCoroutine = null;
+
+            playerRenderer.color = originalColor;
+
             playerRenderer.enabled = true;
         }
         if (col != null) col.enabled = true;
@@ -238,12 +264,20 @@ public class Vortex : MonoBehaviour
 
     private IEnumerator BlinkPlayer()
     {
+        Color damageColor = new Color(1f, 0.3f, 0.3f, 1f);
+
         while (true)
         {
-            if (playerRenderer != null) playerRenderer.enabled = !playerRenderer.enabled;
+            // 赤点滅
+            playerRenderer.color = damageColor;
+            yield return new WaitForSeconds(blinkInterval);
+
+            // 元の色に戻す
+            playerRenderer.color = originalColor;
             yield return new WaitForSeconds(blinkInterval);
         }
     }
+
 
     private void ShowFloatingText(Vector3 worldPos, int score)
     {

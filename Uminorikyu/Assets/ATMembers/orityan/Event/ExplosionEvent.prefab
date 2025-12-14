@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6769440026495378334}
   - component: {fileID: 3004843001730593435}
   - component: {fileID: 8743133272878925892}
-  - component: {fileID: 785930269841558433}
   m_Layer: 0
   m_Name: ExplosionEvent
   m_TagString: Untagged
@@ -70,16 +69,3 @@ MonoBehaviour:
   spawnAreaHeight: 20
   maxSpawnAttempts: 100
   showSpawnRange: 1
---- !u!114 &785930269841558433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 348125777234587137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 143457713dbc0ce488a78d17bb2c5435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  time: 5

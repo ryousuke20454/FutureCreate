@@ -1103,6 +1103,7 @@ GameObject:
   - component: {fileID: 501940477}
   - component: {fileID: 501940478}
   - component: {fileID: 501940479}
+  - component: {fileID: 501940480}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1297,6 +1298,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &501940480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 501940472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd00cb6d1d0b83448a03650dab8837c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 501940472}
+  stamina: {fileID: 652002699}
+  maxStamina: 100
 --- !u!1 &508613768 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4211814932138820378, guid: 0f99051e8ca67154c98ba82206380815, type: 3}
@@ -1937,6 +1953,7 @@ GameObject:
   - component: {fileID: 892503667}
   - component: {fileID: 892503668}
   - component: {fileID: 892503669}
+  - component: {fileID: 892503670}
   m_Layer: 6
   m_Name: Player (1)
   m_TagString: Player
@@ -2131,6 +2148,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &892503670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892503662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd00cb6d1d0b83448a03650dab8837c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 892503662}
+  stamina: {fileID: 508613768}
+  maxStamina: 100
 --- !u!1 &1058290466
 GameObject:
   m_ObjectHideFlags: 0
@@ -3100,7 +3132,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1834302481100158646, guid: 667cb28fd5abc124880c96976a0f49fd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2558283902697261076, guid: 667cb28fd5abc124880c96976a0f49fd, type: 3}
       propertyPath: m_Pivot.x
@@ -3231,23 +3263,23 @@ PrefabInstance:
       objectReference: {fileID: 348125777234587137, guid: 130201e6f444a084d9d62501bc47aece, type: 3}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[0].percent
-      value: 80
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[1].percent
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[2].percent
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[3].percent
-      value: 70
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[4].percent
-      value: 30
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1394253441827555232, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -3379,7 +3411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6352907712212105209, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: 'timeLimits.Array.data[2]'
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7100657827922682650, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: m_Color.b
@@ -4165,7 +4197,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 100
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

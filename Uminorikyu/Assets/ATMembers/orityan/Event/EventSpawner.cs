@@ -35,7 +35,7 @@ public class EventSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timer.nowTime % 5 == 0)
+        if (timer.nowTime  == 30)
         {
             if (!flag)
             {

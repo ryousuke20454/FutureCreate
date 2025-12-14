@@ -33,7 +33,7 @@ class TitleSceneManager : MonoBehaviour
                     {
                         SEManager.Instance.Play(SEPath.CLICK);
                         use = true;
-                        PlayerControllerManager.controllerManager.round.roundNum = Round.Round1;
+                        PlayerControllerManager.controllerManager.round.roundNum = Round.Round3;
                         Instantiate(fadeIn);
                     }
                 }

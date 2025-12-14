@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4365663695177748945}
   - component: {fileID: 5788784649683282617}
-  - component: {fileID: 7403343837593312737}
   m_Layer: 0
   m_Name: BigTrashEvent
   m_TagString: Untagged
@@ -58,16 +57,3 @@ MonoBehaviour:
   spawnAreaHeight: 20
   maxSpawnAttempts: 100
   showSpawnRange: 1
---- !u!114 &7403343837593312737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8234734979671713659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 143457713dbc0ce488a78d17bb2c5435, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  time: 5

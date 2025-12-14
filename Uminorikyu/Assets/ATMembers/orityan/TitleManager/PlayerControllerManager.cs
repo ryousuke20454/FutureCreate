@@ -47,7 +47,7 @@ public class PlayerControllerManager : MonoBehaviour
 
         player[0].score = 0;
         player[1].score = 0;
-        round.roundNum = Round.Round1;
+        round.roundNum = Round.Title;
         round.weatherNum = 1;
     }
 

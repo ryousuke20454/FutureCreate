@@ -25,24 +25,16 @@ public class PlayerAndStaminaInfo : MonoBehaviour
         }
     }
 
-    private void UpdateSlider()
-    {
-        if (staminaSlider != null)
-            staminaSlider.value = currentStamina;
-    }
-
     public void TakeDamage(float amount)
     {
         // 既にバーンアウト中なら処理しない
         if (player.GetComponent<OriiPlayerMove>().barnOut)
             return;
 
-        currentStamina -= amount;
-        if (currentStamina < 0) currentStamina = 0;
+        staminaSlider.value -= amount;
+        if (staminaSlider.value < 0) staminaSlider.value = 0;
 
-        UpdateSlider();
-
-        if (currentStamina <= 0)
+        if (staminaSlider.value <= 0)
         {
             GetExplosionTrash();
         }

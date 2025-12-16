@@ -17,6 +17,7 @@ public class StaminaHeal : MonoBehaviour
 
     PlayerInputScript input;
     Gamepad gamepad;
+    public bool isHealActive = true;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -66,6 +67,26 @@ public class StaminaHeal : MonoBehaviour
                     {
                         GetComponent<Slider>().value = staminaMax;
                     }
+                }
+            }
+        }
+        if(Input.GetKey(KeyCode.Return))
+        {
+            GetComponent<Slider>().value += healSpeed;
+
+            if (GetComponent<Slider>().value >= staminaMax)
+            {
+                if (!player.GetComponent<OriiPlayerMove>().nowEvent)
+                {
+                    if (particle != null)
+                    {
+                        particle.Stop();
+                    }
+                    player.GetComponent<OriiPlayerMove>().barnOut = false;
+                }
+                else
+                {
+                    GetComponent<Slider>().value = staminaMax;
                 }
             }
         }

@@ -18,6 +18,15 @@ public class WaveEvent : MonoBehaviour
         public float pulseTimer;
     }
 
+    private enum PlayerEffectState { None, Riding }
+
+    private class PlayerEffectData
+    {
+        public GameObject player;
+        public ParticleSystem rideInstance;
+        public PlayerEffectState currentState = PlayerEffectState.None;
+    }
+
     [Header("波のプレハブ")]
     [SerializeField] private GameObject wavePrefab;
 
@@ -30,11 +39,22 @@ public class WaveEvent : MonoBehaviour
     [SerializeField] private float waveLifeTime = 30f;
     [SerializeField] private float minSpacingBetweenWaves = 3f;
     [SerializeField] private float avoidFieldEdgeMargin = 0.5f;
-    [SerializeField][Range(0f, 1f)] private float initialAlpha = 0.6f; // 初期アルファ値
+    [SerializeField][Range(0f, 1f)] private float initialAlpha = 0.6f;
 
+    [Header("プレイヤー向けエフェクト判定")]
+    [SerializeField][Range(-1f, 1f)] private float rideDotThreshold = 0.5f;
+
+    [Header("プレイヤー用パーティクル (WaveEvent 内で完結)")]
+    [Tooltip("プレイヤーの乗っている時に表示する ParticleSystem のプレハブ（Scene のプレイヤーに子としてインスタンス化されます）")]
+    [SerializeField] private ParticleSystem rideParticlePrefab;
+    [SerializeField] private Vector3 particleLocalOffset = Vector3.zero;
+
+    [Header("Particle Emission")]
+    [SerializeField] private float minEmission = 5f;
+    [SerializeField] private float maxEmission = 60f;
 
     [Header("ゴミへの影響")]
-    [SerializeField] private float trashMovementSpeed = 2f; // 新しいパラメータ：ゴミの移動速度（直接指定）
+    [SerializeField] private float trashMovementSpeed = 2f;
 
     [Header("その他")]
     [SerializeField] private bool affectTrash = true;
@@ -43,6 +63,8 @@ public class WaveEvent : MonoBehaviour
     private List<WaveInstance> activeWaves = new List<WaveInstance>();
     private GameObject[] fieldObjects;
     private bool hasSpawnedInitialWaves = false;
+
+    private Dictionary<GameObject, PlayerEffectData> playerEffects = new Dictionary<GameObject, PlayerEffectData>();
 
     private void Start()
     {
@@ -86,6 +108,17 @@ public class WaveEvent : MonoBehaviour
                         Debug.Log($"[WaveEvent] Wave removed after {waveLifeTime}s. Remaining waves: {activeWaves.Count}");
                 }
             }
+
+            var keysToRemove = new List<GameObject>();
+            foreach (var kv in playerEffects)
+            {
+                if (kv.Key == null)
+                {
+                    DestroyPlayerEffectData(kv.Value);
+                    keysToRemove.Add(kv.Key);
+                }
+            }
+            foreach (var k in keysToRemove) playerEffects.Remove(k);
         }
     }
 
@@ -196,6 +229,17 @@ public class WaveEvent : MonoBehaviour
         }
 
         UpdateWaveVisuals();
+
+        var removeList = new List<GameObject>();
+        foreach (var kv in playerEffects)
+        {
+            if (kv.Key == null)
+            {
+                DestroyPlayerEffectData(kv.Value);
+                removeList.Add(kv.Key);
+            }
+        }
+        foreach (var k in removeList) playerEffects.Remove(k);
     }
 
     private void UpdateWaveVisuals()
@@ -268,6 +312,9 @@ public class WaveEvent : MonoBehaviour
         bool isInAnyWave = false;
         Vector3 totalMovement = Vector3.zero;
 
+        WaveInstance bestWave = null;
+        float bestWaveWeight = 0f;
+
         foreach (var wave in activeWaves)
         {
             float dist = Vector2.Distance(objPos, wave.position);
@@ -285,12 +332,17 @@ public class WaveEvent : MonoBehaviour
 
             float distFactor = 1f - (dist / wave.radius);
 
-            if (rb == null && !isPlayer) // Trash処理
+            float weight = distFactor * strengthMultiplier;
+            if (weight > bestWaveWeight)
             {
-                // Time.fixedDeltaTimeを掛けずに、trashMovementSpeedを直接使用
+                bestWaveWeight = weight;
+                bestWave = wave;
+            }
+
+            if (rb == null && !isPlayer)
+            {
                 Vector2 movement = wave.direction * trashMovementSpeed * distFactor * strengthMultiplier * Time.fixedDeltaTime;
 
-                // フィールド境界チェック
                 Vector2 projectedPos = objPos + movement;
                 Vector2 clampedPos = new Vector2(
                     Mathf.Clamp(projectedPos.x, wave.fieldBounds.min.x, wave.fieldBounds.max.x),
@@ -303,7 +355,7 @@ public class WaveEvent : MonoBehaviour
                 if (debugLogs && Time.frameCount % 60 == 0)
                     Debug.Log($"[WaveEvent] Trash movement this wave: {movement.magnitude:F4}");
             }
-            else if (isPlayer && rb != null) // Player処理
+            else if (isPlayer && rb != null)
             {
                 Vector2 targetVelocity = wave.direction * waveFlowSpeed * (wave.radius / maxWaveRadius);
                 float influenceRate = waveInfluenceStrength * distFactor * strengthMultiplier * Time.fixedDeltaTime;
@@ -311,7 +363,6 @@ public class WaveEvent : MonoBehaviour
             }
         }
 
-        // Trash用の累積移動を適用
         if (rb == null && totalMovement != Vector3.zero)
         {
             obj.transform.position += totalMovement;
@@ -323,6 +374,140 @@ public class WaveEvent : MonoBehaviour
         if (isPlayer && !isInAnyWave && rb != null)
         {
             rb.linearVelocity *= 0.95f;
+        }
+
+        if (isPlayer && rb != null)
+        {
+            if (bestWave == null)
+            {
+                UpdatePlayerEffectState(obj, PlayerEffectState.None, 0f);
+            }
+            else
+            {
+                Vector2 playerVel = rb.linearVelocity;
+                Vector2 playerDir;
+                if (playerVel.sqrMagnitude > 0.001f)
+                    playerDir = playerVel.normalized;
+                else
+                    playerDir = (obj.transform.right != Vector3.zero) ? (Vector2)obj.transform.right.normalized : Vector2.zero;
+
+                float dot = Vector2.Dot(playerDir, bestWave.direction.normalized);
+                float strength = Mathf.Clamp01(bestWaveWeight);
+
+                if (dot >= rideDotThreshold)
+                {
+                    UpdatePlayerEffectState(obj, PlayerEffectState.Riding, strength);
+                }
+                else
+                {
+                    UpdatePlayerEffectState(obj, PlayerEffectState.None, strength);
+                }
+
+                if (debugLogs && Time.frameCount % 60 == 0)
+                {
+                    Debug.Log($"[WaveEvent] playerDir={playerDir}, waveDir={bestWave.direction.normalized}, dot={dot:F3}, weight={bestWaveWeight:F3}");
+                }
+            }
+        }
+    }
+
+    private PlayerEffectData EnsurePlayerEffectData(GameObject player)
+    {
+        if (player == null) return null;
+
+        if (playerEffects.TryGetValue(player, out var data))
+            return data;
+
+        data = new PlayerEffectData { player = player, currentState = PlayerEffectState.None };
+
+        if (rideParticlePrefab != null)
+        {
+            var inst = Instantiate(rideParticlePrefab.gameObject, player.transform).GetComponent<ParticleSystem>();
+            inst.gameObject.name = "RideParticle_Instance";
+            inst.transform.localPosition = particleLocalOffset;
+            StopAndDisableEmission(inst);
+            data.rideInstance = inst;
+        }
+
+        playerEffects[player] = data;
+        return data;
+    }
+
+    private void UpdatePlayerEffectState(GameObject player, PlayerEffectState newState, float strength)
+    {
+        if (player == null) return;
+
+        var data = EnsurePlayerEffectData(player);
+        if (data == null) return;
+
+        float rate = Mathf.Lerp(minEmission, maxEmission, Mathf.Clamp01(strength));
+
+        if (data.currentState == newState)
+        {
+            switch (newState)
+            {
+                case PlayerEffectState.Riding:
+                    if (data.rideInstance != null)
+                    {
+                        SetEmission(data.rideInstance, rate, true);
+                        if (!data.rideInstance.isPlaying)
+                        {
+                            data.rideInstance.Play();
+                        }
+                    }
+                    break;
+                case PlayerEffectState.None:
+                default:
+                    break;
+            }
+            return;
+        }
+
+        if (data.rideInstance != null)
+        {
+            StopAndDisableEmission(data.rideInstance);
+        }
+
+        switch (newState)
+        {
+            case PlayerEffectState.Riding:
+                if (data.rideInstance != null)
+                {
+                    SetEmission(data.rideInstance, rate, true);
+                    data.rideInstance.Play();
+                }
+                break;
+            case PlayerEffectState.None:
+            default:
+                break;
+        }
+
+        data.currentState = newState;
+    }
+
+    private void StopAndDisableEmission(ParticleSystem ps)
+    {
+        if (ps == null) return;
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        var em = ps.emission;
+        em.enabled = false;
+    }
+
+    private void SetEmission(ParticleSystem ps, float rate, bool enabled)
+    {
+        if (ps == null) return;
+        var em = ps.emission;
+        em.enabled = enabled;
+        em.rateOverTime = new ParticleSystem.MinMaxCurve(rate);
+    }
+
+    private void DestroyPlayerEffectData(PlayerEffectData data)
+    {
+        if (data == null) return;
+        if (data.rideInstance != null)
+        {
+            Destroy(data.rideInstance.gameObject);
+            data.rideInstance = null;
         }
     }
 

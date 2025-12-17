@@ -53,7 +53,14 @@ MonoBehaviour:
   waveLifeTime: 30
   minSpacingBetweenWaves: 3
   avoidFieldEdgeMargin: 0.5
-  initialAlpha: 1
+  initialAlpha: 0.6
+  rideDotThreshold: 0.5
+  resistDotThreshold: -0.5
+  rideParticlePrefab: {fileID: 8233213090001589817, guid: be05645cd377f3643a1d63f14ef064f7, type: 3}
+  resistParticlePrefab: {fileID: 3268927232374874328, guid: 408d2ddd854a1a849b98a1dd11cfee67, type: 3}
+  particleLocalOffset: {x: 0, y: 0, z: 0}
+  minEmission: 5
+  maxEmission: 60
   trashMovementSpeed: 2
   affectTrash: 1
   debugLogs: 0

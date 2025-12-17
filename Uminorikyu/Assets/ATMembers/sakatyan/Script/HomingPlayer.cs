@@ -123,7 +123,7 @@ public class Vortex : MonoBehaviour
 
                 if (particle2 != null)
                 {
-                    GameObject p = Instantiate(particle2, transform.position, Quaternion.identity);
+                    GameObject p = Instantiate(particle2, collision.transform.position, Quaternion.identity);
 
                     // ゴミの大きさを取得してパーティクルに反映
                     p.transform.localScale *= trashScale * 0.8f;  // ←倍率は調整可能

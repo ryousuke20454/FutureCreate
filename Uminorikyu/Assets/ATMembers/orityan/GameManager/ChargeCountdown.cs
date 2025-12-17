@@ -74,12 +74,14 @@ public class ChargeCountdown : MonoBehaviour
                 //タイマーとスタミナのUIがONになる
                 manager.GetComponent<CanvasManager>().CanvasSwitch(1, true);
                 manager.GetComponent<CanvasManager>().CanvasSwitch(2, true);
+                manager.GetComponent<CanvasManager>().CanvasSwitch(3, true);
                 //スタミナをコピーする
                 stamina[0].GetComponent<StaminaCopy>().Copy();
                 stamina[1].GetComponent<StaminaCopy>().Copy();
-                //プレイヤーのイベントフラグをfalseにする
-                players[0].GetComponent<OriiPlayerMove>().nowEvent = false;
-                players[1].GetComponent<OriiPlayerMove>().nowEvent = false;
+                //タイマーとスタミナのUIがONになる
+                manager.GetComponent<CanvasManager>().CanvasSwitch(1, false);
+                manager.GetComponent<CanvasManager>().CanvasSwitch(2, false);
+
                 //チャージイベントのキャンバスをOFFにする
                 manager.GetComponent<CanvasManager>().CanvasSwitch(0, false);
 

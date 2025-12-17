@@ -10,6 +10,7 @@ public class CanvasManager : MonoBehaviour
         canvas[0].gameObject.SetActive(true);
         canvas[1].gameObject.SetActive(false);
         canvas[2].gameObject.SetActive(false);
+        canvas[3].gameObject.SetActive(false);
     }
 
 

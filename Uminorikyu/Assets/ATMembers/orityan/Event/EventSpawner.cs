@@ -13,11 +13,12 @@ public class EventSpawner : MonoBehaviour
         public bool appearance;
     }
 
+
     int weather = 1;
     [SerializeField] int eventMax;
     //インスペクターでイベントの種類ごとに設定する
     [SerializeField] EventState[] eventStates;
-
+    [SerializeField] GameObject bannerCanvas;
 
     RoundTimer timer;//ラウンドの残り時間を取得する用
     bool flag;       //一秒間に何度も呼ばれない様にするための制御用
@@ -52,6 +53,8 @@ public class EventSpawner : MonoBehaviour
                         eventStates[i].target = Instantiate(eventStates[i].events);
                         eventCount++;
                         Debug.Log("抽選成功！");
+
+                        bannerCanvas.GetComponent<EventNotification>().IsNotification(i);
                     }
                     else
                     {

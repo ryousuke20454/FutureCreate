@@ -1,13 +1,16 @@
+using KanKikuchi.AudioManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.DualShock;
 using UnityEngine.InputSystem.XInput;
+using static UnityEngine.ParticleSystem;
 
 
 public class OriiPlayerMove : MonoBehaviour
 {
     [SerializeField] public float moveSpeed;
     public bool dash;
+    bool beforeBarnOutCheck;
     public bool barnOut;
     public bool nowEvent;
 
@@ -15,6 +18,7 @@ public class OriiPlayerMove : MonoBehaviour
     Gamepad gamepad;
 
     [SerializeField] GameObject roundTimer;
+    [SerializeField] ParticleSystem particle;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,6 +27,7 @@ public class OriiPlayerMove : MonoBehaviour
         gamepad = input.controller;
 
         dash = false;
+        beforeBarnOutCheck = true;
         barnOut = true;
         nowEvent = true;
     }
@@ -147,6 +152,17 @@ public class OriiPlayerMove : MonoBehaviour
                     -10.0f,
                     transform.position.z);
             }
+
+            if (barnOut && !beforeBarnOutCheck)
+            {
+                if (particle != null)
+                {
+                    particle.Play();
+                }
+                SEManager.Instance.Play(SEPath.EXPLOSION);
+            }
+
+            beforeBarnOutCheck = barnOut;
         }
     }
 }

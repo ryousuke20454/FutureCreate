@@ -38,6 +38,16 @@ class TitleSceneManager : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                if (Input.GetKey(KeyCode.Return))
+                {
+                    SEManager.Instance.Play(SEPath.CLICK);
+                    use = true;
+                    PlayerControllerManager.controllerManager.round.roundNum = Round.Round3;
+                    Instantiate(fadeIn);
+                }
+            }
         }
     }
 }

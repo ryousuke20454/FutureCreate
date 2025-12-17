@@ -48,11 +48,6 @@ public class StaminaUse : MonoBehaviour
             else
             {
                 player.GetComponent<OriiPlayerMove>().moveSpeed = stickPower;
-                if (particle != null)
-                {
-                    particle.Play();
-                }
-                SEManager.Instance.Play(SEPath.EXPLOSION);
                 GetComponent<StaminaState>().player.GetComponent<OriiPlayerMove>().barnOut = true;
             }
         }

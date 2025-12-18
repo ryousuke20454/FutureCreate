@@ -56,6 +56,7 @@ public class Vortex : MonoBehaviour
     private PlayerAndStaminaInfo playerStamina;
     private Coroutine blinkCoroutine;
     private Color originalColor;
+    private bool isInvincible = false;  // 12/18追加、点滅中に移動できるようにするためのもの(起き攻め防止)
 
     public Transform TargetToFollow => targetToFollow;
 
@@ -88,15 +89,33 @@ public class Vortex : MonoBehaviour
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
         transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * growSpeed);
 
-        if (targetToFollow != null/* && !isKnockback*/)
+        // ===== バーンアウト中は移動不可 =====
+        if (playerController != null)
         {
-            transform.position = new Vector3(targetToFollow.position.x, targetToFollow.position.y, 0f);
+            if (playerController.barnOut)
+            {
+                playerController.enabled = false;
+            }
+            else if (!isKnockback) // 吹き飛び中でなければ
+            {
+                playerController.enabled = true;
+            }
+        }
+
+        if (targetToFollow != null)
+        {
+            transform.position = new Vector3(
+                targetToFollow.position.x,
+                targetToFollow.position.y,
+                0f
+            );
         }
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isKnockback) return;
+        if (isKnockback || isInvincible) return;
 
         // ---- ゴミとの接触 ----
         if (collision.CompareTag("Trash"))
@@ -215,14 +234,12 @@ public class Vortex : MonoBehaviour
 
     private IEnumerator KnockbackWithPlayer(Vector2 direction, float bounceMultiplier = 1f)
     {
+        // ===== 吹き飛び開始 =====
         isKnockback = true;
+        isInvincible = false;
+
         if (col != null) col.enabled = false;
         if (playerController != null) playerController.enabled = false;
-        if (playerRenderer != null)
-        {
-            if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
-            blinkCoroutine = StartCoroutine(BlinkPlayer());
-        }
 
         Vector3 startPosVortex = transform.position;
         Vector3 startPosPlayer = targetToFollow.position;
@@ -246,21 +263,34 @@ public class Vortex : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(stopDuration);
+        // ===== 吹き飛び終了 → 点滅無敵開始 =====
+        isKnockback = false;
+        isInvincible = true;
 
         if (playerController != null) playerController.enabled = true;
+
+        if (playerRenderer != null)
+        {
+            if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+            blinkCoroutine = StartCoroutine(BlinkPlayer());
+        }
+
+        // 点滅（無敵）時間
+        yield return new WaitForSeconds(stopDuration);
+
+        // ===== 完全復帰 =====
+        isInvincible = false;
+
         if (blinkCoroutine != null)
         {
             StopCoroutine(blinkCoroutine);
             blinkCoroutine = null;
-
             playerRenderer.color = originalColor;
-
-            playerRenderer.enabled = true;
         }
+
         if (col != null) col.enabled = true;
-        isKnockback = false;
     }
+
 
     private IEnumerator BlinkPlayer()
     {

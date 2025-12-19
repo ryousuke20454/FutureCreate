@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class ChargeCountdown : MonoBehaviour
 {
-    [SerializeField] GameObject[] players;
     [SerializeField] float countTimeMax = 8f; // 実際の総時間
     [SerializeField] float delayTime = 3f; // ディレイ時間
     [SerializeField] GameObject manager;
@@ -78,6 +77,7 @@ public class ChargeCountdown : MonoBehaviour
                 //スタミナをコピーする
                 stamina[0].GetComponent<StaminaCopy>().Copy();
                 stamina[1].GetComponent<StaminaCopy>().Copy();
+
                 //タイマーとスタミナのUIがONになる
                 manager.GetComponent<CanvasManager>().CanvasSwitch(1, false);
                 manager.GetComponent<CanvasManager>().CanvasSwitch(2, false);

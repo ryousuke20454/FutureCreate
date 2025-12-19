@@ -10,7 +10,7 @@ public class OriiPlayerMove : MonoBehaviour
 {
     [SerializeField] public float moveSpeed;
     public bool dash;
-    bool beforeBarnOutCheck;
+    public bool beforeBarnOutCheck;
     public bool barnOut;
     public bool nowEvent;
 
@@ -152,17 +152,17 @@ public class OriiPlayerMove : MonoBehaviour
                     -10.0f,
                     transform.position.z);
             }
-
-            if (barnOut && !beforeBarnOutCheck)
-            {
-                if (particle != null)
-                {
-                    particle.Play();
-                }
-                SEManager.Instance.Play(SEPath.EXPLOSION);
-            }
-
-            beforeBarnOutCheck = barnOut;
         }
+
+        if (barnOut && !beforeBarnOutCheck)
+        {
+            if (particle != null)
+            {
+                particle.Play();
+            }
+            SEManager.Instance.Play(SEPath.EXPLOSION);
+        }
+
+        beforeBarnOutCheck = barnOut;
     }
 }

@@ -94,7 +94,7 @@ public class Vortex : MonoBehaviour
         {
             if (playerController.barnOut)
             {
-                playerController.enabled = false;
+                //playerController.enabled = false;
             }
             else if (!isKnockback) // ‚«”ò‚Ñ’†‚Å‚È‚¯‚ê‚Î
             {

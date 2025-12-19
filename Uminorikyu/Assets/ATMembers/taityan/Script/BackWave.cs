@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class BackWave : MonoBehaviour
 {
     public RectTransform image; // 動かす画像の参照
-    private int counter = 0; // カウンター変数
     private float move = 1.0f; //この数字の2倍動きます
 
     private float num = 860.0f;//端から端までの移動量

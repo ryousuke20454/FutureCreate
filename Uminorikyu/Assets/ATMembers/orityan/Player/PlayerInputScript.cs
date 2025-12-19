@@ -49,7 +49,7 @@ public class PlayerInputScript : MonoBehaviour
                 // 左スティックの入力値を取得
                 value = gamepad.leftStick.ReadValue();
             }
-            //アケコンだったら
+            // アケコンだったら
             else if (joystick == "Controller (HORI Fighting Stick mini)")
             {
                 // 左スティックの入力値を取得
@@ -58,6 +58,14 @@ public class PlayerInputScript : MonoBehaviour
             else if (joystick == "Controller (HORI Fighting Stick mini for PC)")
             {
                 // 左スティックの入力値を取得
+                value = gamepad.leftStick.ReadValue();
+            }
+            else if (gamepad.name == "XInputControllerWindows")
+            {
+                value = gamepad.leftStick.ReadValue();
+            }
+            else if (gamepad.name == "XInputControllerWindows1")
+            {
                 value = gamepad.leftStick.ReadValue();
             }
         }

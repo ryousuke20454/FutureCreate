@@ -14,10 +14,6 @@ public class StaminaCopy : MonoBehaviour
 
     public void Copy()
     {
-        if (mine.value > 0)
-        {
-            player.GetComponent<OriiPlayerMove>().barnOut = false;
-        }
         slider.value = mine.value;
     }
 }

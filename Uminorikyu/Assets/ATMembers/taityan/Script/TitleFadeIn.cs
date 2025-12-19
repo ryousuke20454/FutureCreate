@@ -56,6 +56,7 @@ public class TitleFadeIn : MonoBehaviour
             switch (PlayerControllerManager.controllerManager.round.roundNum)
             {
                 case Round.Title:
+                    PlayerControllerManager.controllerManager.RestartGame();
                     SceneManager.LoadScene(nextSceneName[0]);
                     break;
                 case Round.Round1:

@@ -97,7 +97,5 @@ public class PlayerControllerManager : MonoBehaviour
         {
             player[i].score = 0;
         }
-
-        round.roundNum = Round.Title;
     }
 }

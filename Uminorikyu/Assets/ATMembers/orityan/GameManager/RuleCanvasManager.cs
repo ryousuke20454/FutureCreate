@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RuleCanvasManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class RuleCanvasManager : MonoBehaviour
     [SerializeField] GameObject manager;
     [SerializeField] GameObject[] players;
     [SerializeField] float waitTime;
+
+    [SerializeField] GameObject[] stamina;
     float countTime;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -35,6 +38,15 @@ public class RuleCanvasManager : MonoBehaviour
                 manager.GetComponent<CanvasManager>().CanvasSwitch(3, false);
 
                 //プレイヤーのイベントフラグをfalseにする
+                if (stamina[0].GetComponent<Slider>().value > 0)
+                {
+                    players[0].GetComponent<OriiPlayerMove>().barnOut = false;
+                }
+                if (stamina[1].GetComponent<Slider>().value > 0)
+                {
+                    players[1].GetComponent<OriiPlayerMove>().barnOut = false;
+                }
+
                 players[0].GetComponent<OriiPlayerMove>().nowEvent = false;
                 players[1].GetComponent<OriiPlayerMove>().nowEvent = false;
 

@@ -37,11 +37,11 @@ public class TrashStatus : MonoBehaviour
             velocity.x *= -1;
         }
 
-        if (transform.position.y > 10.0f)
+        if (transform.position.y > 9.0f)
         {
             transform.position = new Vector3(
                 transform.position.x,
-                10.0f,
+                9.0f,
                 transform.position.z);
             velocity.y *= -1;
         }

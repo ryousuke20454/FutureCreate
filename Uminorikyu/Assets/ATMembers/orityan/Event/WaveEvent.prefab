@@ -54,7 +54,7 @@ MonoBehaviour:
   minSpacingBetweenWaves: 3
   avoidFieldEdgeMargin: 0.5
   initialAlpha: 0.6
-  uvScrollSpeed: 0.1
+  uvScrollSpeed: 0.2
   texturePropertyName: _MainTex
   rideDotThreshold: 0.5
   rideParticlePrefab: {fileID: 8233213090001589817, guid: be05645cd377f3643a1d63f14ef064f7, type: 3}

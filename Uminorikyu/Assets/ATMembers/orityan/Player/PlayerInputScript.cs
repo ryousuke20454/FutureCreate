@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.HID;
 
 public class PlayerInputScript : MonoBehaviour
 {
@@ -23,17 +24,28 @@ public class PlayerInputScript : MonoBehaviour
         }
         else
         {
-            string[] joysticks = Input.GetJoystickNames();
-            for (int i = 0; i < joysticks.Length; i++)
+            string[] joysticksNames = Input.GetJoystickNames();
+            string[] joysticks = new string[2];
+
+            for (int i = 0; i < joysticksNames.Length; i++)
             {
-                if (joysticks[i] != "")
+                if (!string.IsNullOrEmpty(joysticksNames[i].Trim()))
                 {
-                    joystick = joysticks[i + PlayerNum] ;
-                    break;
+                    if (joysticks[0] == null)
+                    {
+                        joysticks[0] = joysticksNames[i];
+                        continue;
+                    }
+
+                    if (joysticks[1] == null)
+                    {
+                        joysticks[1] = joysticksNames[i];
+                        break;                    
+                    }
                 }
             }
 
-            Debug.Log(joystick);
+            joystick = joysticks[PlayerNum];
         }
     }
 
@@ -49,20 +61,20 @@ public class PlayerInputScript : MonoBehaviour
                 // 左スティックの入力値を取得
                 value = gamepad.leftStick.ReadValue();
             }
-            // アケコンだったら
-            else if (joystick == "Controller (HORI Fighting Stick mini)")
-            {
-                // 左スティックの入力値を取得
-                value = gamepad.dpad.ReadValue();
-            }
-            else if (joystick == "Controller (HORI Fighting Stick mini for PC)")
-            {
-                // 左スティックの入力値を取得
-                value = gamepad.leftStick.ReadValue();
-            }
+            //// アケコンだったら
+            //else if (joystick == "Controller (HORI Fighting Stick mini)")
+            //{
+            //    // 左スティックの入力値を取得
+            //    value = gamepad.dpad.ReadValue();
+            //}
+            //else if (joystick == "Controller (HORI Fighting Stick mini for PC)")
+            //{
+            //    // 左スティックの入力値を取得
+            //    value = gamepad.leftStick.ReadValue();
+            //}
             else if (gamepad.name == "XInputControllerWindows")
             {
-                value = gamepad.leftStick.ReadValue();
+                value = gamepad.dpad.ReadValue();
             }
             else if (gamepad.name == "XInputControllerWindows1")
             {

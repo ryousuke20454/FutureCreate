@@ -1269,7 +1269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetToFollow: {fileID: 892503665}
   speed: 20
-  maxScale: 3
+  maxScale: 3.5
   growSpeed: 3
   rotationSpeed: 180
   bounceDistance: 6
@@ -3779,7 +3779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetToFollow: {fileID: 501940475}
   speed: 20
-  maxScale: 3
+  maxScale: 3.5
   growSpeed: 3
   rotationSpeed: 180
   bounceDistance: 6
@@ -4158,6 +4158,9 @@ MonoBehaviour:
   - {fileID: 501940472}
   - {fileID: 892503662}
   waitTime: 1
+  stamina:
+  - {fileID: 652002699}
+  - {fileID: 508613768}
 --- !u!1 &1739464544
 GameObject:
   m_ObjectHideFlags: 0

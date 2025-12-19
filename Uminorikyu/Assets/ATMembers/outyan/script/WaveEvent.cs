@@ -41,6 +41,10 @@ public class WaveEvent : MonoBehaviour
     [SerializeField] private float avoidFieldEdgeMargin = 0.5f;
     [SerializeField][Range(0f, 1f)] private float initialAlpha = 0.6f;
 
+    [Header("UV スクロール設定")]
+    [SerializeField] private float uvScrollSpeed = 0.5f;
+    [SerializeField] private string texturePropertyName = "_MainTex";
+
     [Header("プレイヤー向けエフェクト判定")]
     [SerializeField][Range(-1f, 1f)] private float rideDotThreshold = 0.5f;
 
@@ -250,21 +254,44 @@ public class WaveEvent : MonoBehaviour
 
             float elapsedTime = Time.time - wave.spawnTime;
 
+            // アルファ値の計算（フェードアウト）
             float alpha = initialAlpha;
             if (elapsedTime > waveLifeTime - 5f)
             {
                 float fadeProgress = (elapsedTime - (waveLifeTime - 5f)) / 5f;
-                alpha = Mathf.Clamp01(1f - fadeProgress);
+                alpha = Mathf.Lerp(initialAlpha, 0f, fadeProgress);
             }
 
+            // UV スクロールの計算（縦方向にスクロール）
+            // 波は常にY軸方向（縦）にスクロール
+            Vector2 uvOffset = new Vector2(0, -uvScrollSpeed * elapsedTime);
+
+            // SpriteRenderer の更新
             var spriteRenderers = wave.waveObject.GetComponentsInChildren<SpriteRenderer>();
             foreach (var sr in spriteRenderers)
             {
-                Color col = sr.color;
-                col.a = alpha;
-                sr.color = col;
+                // マテリアルのインスタンス化（既にインスタンス化されていなければ）
+                if (!sr.material.name.Contains("(Instance)"))
+                {
+                    sr.material = new Material(sr.material);
+                }
+
+                // UV オフセットの設定
+                if (sr.material.HasProperty(texturePropertyName))
+                {
+                    sr.material.SetTextureOffset(texturePropertyName, uvOffset);
+                }
+
+                // マテリアルのアルファ値を設定
+                if (sr.material.HasProperty("_Color"))
+                {
+                    Color matColor = sr.material.GetColor("_Color");
+                    matColor.a = alpha;
+                    sr.material.SetColor("_Color", matColor);
+                }
             }
 
+            // ParticleSystem の更新
             var particleSystems = wave.waveObject.GetComponentsInChildren<ParticleSystem>();
             foreach (var ps in particleSystems)
             {
@@ -287,6 +314,12 @@ public class WaveEvent : MonoBehaviour
             Color col = sr.color;
             col.a = alpha;
             sr.color = col;
+
+            // マテリアルのインスタンス化
+            if (!sr.material.name.Contains("(Instance)"))
+            {
+                sr.material = new Material(sr.material);
+            }
         }
 
         var particleSystems = waveObj.GetComponentsInChildren<ParticleSystem>();

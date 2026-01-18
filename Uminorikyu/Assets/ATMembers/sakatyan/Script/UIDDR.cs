@@ -9,6 +9,11 @@ public class PrefabSpawner : MonoBehaviour
     [Header("出現位置設定")]
     [SerializeField] private float spawnYPosition = 0.2f; // 出現位置（0=下端, 0.5=中央, 1=上端）
 
+    [SerializeField] float limitTime;
+    float time;
+    float elapsedTime;
+
+
     // この関数を呼ぶとプレハブが画面右端に生成される
     public void SpawnPrefabAtRightEdge()
     {
@@ -27,7 +32,7 @@ public class PrefabSpawner : MonoBehaviour
         }
 
         // 画面右端の座標を計算（2D用: Z座標は0）
-        Vector3 rightEdgePos = cam.ViewportToWorldPoint(new Vector3(1f, spawnYPosition, 0f));
+        Vector3 rightEdgePos = cam.ViewportToWorldPoint(new Vector3(2f, spawnYPosition, 0f));
         rightEdgePos.z = 0f; // 2Dなので確実にZ=0にする
 
         // プレハブを生成（Z軸を90度回転）
@@ -46,9 +51,18 @@ public class PrefabSpawner : MonoBehaviour
     // テスト用: スペースキーで生成
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        elapsedTime += Time.deltaTime;
+        time += Time.deltaTime;
+
+        if (time > 0.33f)
         {
             SpawnPrefabAtRightEdge();
+            time = 0;
+        }
+
+        if (elapsedTime > limitTime)
+        {
+            Destroy(gameObject);
         }
     }
 }

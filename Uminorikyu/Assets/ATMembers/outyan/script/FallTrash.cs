@@ -28,13 +28,6 @@ public class FallTrash : MonoBehaviour
     }
     void Update()
     {
-        // エンターキーで開始
-        if (!isStarted && Input.GetKeyDown(KeyCode.Return))
-        {
-            isStarted = true;
-        }
-        // 開始していなければ何もしない
-        if (!isStarted) return;
         elapsedTime += Time.deltaTime;
         if (elapsedTime > spawnDuration) return;
         timer += Time.deltaTime;

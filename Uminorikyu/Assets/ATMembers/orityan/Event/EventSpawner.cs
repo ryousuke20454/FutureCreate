@@ -19,6 +19,9 @@ public class EventSpawner : MonoBehaviour
     //インスペクターでイベントの種類ごとに設定する
     [SerializeField] EventState[] eventStates;
     [SerializeField] GameObject bannerCanvas;
+    [SerializeField] GameObject fallTrashCanvas;
+    [SerializeField] GameObject WaveThrowCanvas;
+    [SerializeField] Camera UICamera;
 
     RoundTimer timer;//ラウンドの残り時間を取得する用
     bool flag;       //一秒間に何度も呼ばれない様にするための制御用
@@ -55,6 +58,7 @@ public class EventSpawner : MonoBehaviour
 
                         //イベント通知の生成
                         bannerCanvas.GetComponent<EventNotification>().IsNotification(0);
+                        Instantiate(WaveThrowCanvas);
                     }
                     else
                     {
@@ -82,10 +86,25 @@ public class EventSpawner : MonoBehaviour
                         {
                             if (Random.Range(1, 100) < eventStates[i].percent && !eventStates[i].appearance)
                             {
+                                if (i == 3)
+                                {
+                                    eventStates[i + 1].appearance = true;
+                                }
+                                if (i == 4)
+                                {
+                                    eventStates[i - 1].appearance = true;
+                                }
+
                                 eventStates[i].appearance = true;
                                 eventStates[i].target = Instantiate(eventStates[i].events);
                                 eventCount++;
                                 Debug.Log("抽選成功！");
+
+                                if (i == 3 || i == 4)
+                                {
+                                    fallTrashCanvas.GetComponent<Canvas>().worldCamera = UICamera;
+                                    Instantiate(fallTrashCanvas);
+                                }
 
                                 //イベント通知の生成
                                 bannerCanvas.GetComponent<EventNotification>().IsNotification(i);

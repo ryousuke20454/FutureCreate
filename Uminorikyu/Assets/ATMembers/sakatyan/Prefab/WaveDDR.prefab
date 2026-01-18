@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 5116700134157150379, guid: 618fa033579a9274592cc9e329f2cce9, type: 3}
-  spawnYPosition: 0.05
+  spawnYPosition: -0.08

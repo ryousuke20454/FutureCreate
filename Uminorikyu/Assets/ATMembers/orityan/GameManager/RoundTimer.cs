@@ -23,6 +23,8 @@ public class RoundTimer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        nowTime = 40;
+
         if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round1)
         {
             timeLimit = timeLimits[0];
@@ -79,7 +81,7 @@ public class RoundTimer : MonoBehaviour
                 }
                 else if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round2)
                 {
-                    PlayerControllerManager.controllerManager.round.roundNum = Round.Round3;
+                    PlayerControllerManager.controllerManager.round.roundNum = Round.Result;
                 }
                 else if (PlayerControllerManager.controllerManager.round.roundNum == Round.Round3)
                 {

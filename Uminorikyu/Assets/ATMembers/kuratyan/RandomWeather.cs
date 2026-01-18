@@ -19,7 +19,7 @@ public class RandomWeather : MonoBehaviour
 
     void Start()
     {
-        rnd = 3;//Random.Range(1, 4); // ※ 1～3の範囲でランダムな整数値が返る
+        rnd = Random.Range(1, 4); // ※ 1～3の範囲でランダムな整数値が返る
         image = GetComponent<Image>();
 
         if (PlayerControllerManager.controllerManager != null)

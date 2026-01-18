@@ -23,6 +23,7 @@ public class EventSpawner : MonoBehaviour
     RoundTimer timer;//ラウンドの残り時間を取得する用
     bool flag;       //一秒間に何度も呼ばれない様にするための制御用
     int eventCount;  //イベント総数カウント用
+    int firstTime;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,25 +37,24 @@ public class EventSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timer.nowTime  == 30)
+        //対戦時間が20秒以上の時は波の抽選
+        if (timer.nowTime >= 20)
         {
-            if (!flag)
+            if (timer.nowTime % 5 == 0)
             {
-                flag = true;
-
-                for (int i = 0; i < eventStates.Length; i++)
+                if (!flag)
                 {
-                    if (eventCount == eventMax + weather)
-                        break;
+                    flag = true;
 
-                    if (Random.Range(1, 100) < eventStates[i].percent && !eventStates[i].appearance)
+                    if (Random.Range(1, 100) < eventStates[0].percent && !eventStates[0].appearance)
                     {
-                        eventStates[i].appearance = true;
-                        eventStates[i].target = Instantiate(eventStates[i].events);
+                        eventStates[0].appearance = true;
+                        eventStates[0].target = Instantiate(eventStates[0].events);
                         eventCount++;
                         Debug.Log("抽選成功！");
 
-                        bannerCanvas.GetComponent<EventNotification>().IsNotification(i);
+                        //イベント通知の生成
+                        bannerCanvas.GetComponent<EventNotification>().IsNotification(0);
                     }
                     else
                     {
@@ -62,22 +62,45 @@ public class EventSpawner : MonoBehaviour
                     }
                 }
             }
-        }
-        else
-        {
-            flag = false;
-        }
-
-        if (eventCount > 0)
-        {
-            for (int i = 0; i < eventStates.Length; i++)
+            else
             {
-                if (eventStates[i].appearance && eventStates[i].target == null)
+                flag = false;
+            }
+        }
+        else if (timer.nowTime < 20)
+        {
+            if (timer.nowTime % 5 == 0)
+            {
+                if (!flag)
                 {
-                    eventCount--;
-                    eventStates[i].appearance = false;
-                    Debug.Log($"{i + 1}番目のイベントを消したよ！");
+                    flag = true;
+
+
+                    if (eventCount < eventMax + weather)
+                    {
+                        for (int i = 1; i < eventStates.Length; i++)
+                        {
+                            if (Random.Range(1, 100) < eventStates[i].percent && !eventStates[i].appearance)
+                            {
+                                eventStates[i].appearance = true;
+                                eventStates[i].target = Instantiate(eventStates[i].events);
+                                eventCount++;
+                                Debug.Log("抽選成功！");
+
+                                //イベント通知の生成
+                                bannerCanvas.GetComponent<EventNotification>().IsNotification(i);
+                            }
+                            else
+                            {
+                                Debug.Log("抽選失敗！");
+                            }
+                        }
+                    }
                 }
+            }
+            else
+            {
+                flag = false;
             }
         }
     }

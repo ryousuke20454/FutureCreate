@@ -56,7 +56,7 @@ public class PlayerInputScript : MonoBehaviour
         if (gamepad != null)
         {
             //デュアルセンスだったら
-            if (gamepad.name == "DualSenseGamepadHID")
+            if (gamepad.name == "DualSenseGamepadHID"|| gamepad.name == "DualSenseGamepadHID1")
             {
                 // 左スティックの入力値を取得
                 value = gamepad.leftStick.ReadValue();

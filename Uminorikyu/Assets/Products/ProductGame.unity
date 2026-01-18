@@ -4621,23 +4621,23 @@ PrefabInstance:
       objectReference: {fileID: 6408798868887574542, guid: b346dc1d3ea81054da79aa1a3fe00688, type: 3}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[0].percent
-      value: 100
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[1].percent
-      value: 0
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[2].percent
-      value: 0
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[3].percent
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 275920278834168347, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: eventStates.Array.data[4].percent
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1394253441827555232, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -4761,11 +4761,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6352907712212105209, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: 'timeLimits.Array.data[0]'
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6352907712212105209, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: 'timeLimits.Array.data[1]'
-      value: 30
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 6352907712212105209, guid: c1d46df5ae9294f4c97338e5bf054bd6, type: 3}
       propertyPath: 'timeLimits.Array.data[2]'
